@@ -1,0 +1,50 @@
+{
+  "users": [
+    {
+      "id": "2",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane.smith@example.com",
+      "role": "hr",
+      "username": "janesmith"
+    },
+    {
+      "id": "3",
+      "firstName": "Alice",
+      "lastName": "Johnson",
+      "email": "alice.johnson@example.com",
+      "role": "candidate",
+      "username": "alicej"
+    },
+    {
+      "id": "4",
+      "firstName": "Bob",
+      "lastName": "White",
+      "email": "bob.white@example.com",
+      "role": "admin",
+      "username": "bobwhite"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "2",
+      "title": "Project Manager",
+      "description": "Lead projects and coordinate with teams.",
+      "location": "San Francisco, CA",
+      "postedDate": "2025-04-12T12:00:00Z"
+    },
+    {
+      "id": "3",
+      "title": "UI/UX Designer",
+      "description": "Design user-friendly interfaces and experiences.",
+      "location": "Austin, TX",
+      "postedDate": "2025-04-10T12:00:00Z"
+    },
+    {
+      "id": "be6e",
+      "title": "developer",
+      "description": "developper",
+      "location": "sfax"
+    }
+  ]
+}

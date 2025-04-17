@@ -1,0 +1,101 @@
+<div class="container my-5">
+    <div class="d-flex justify-content-between mb-4">
+      <h2>Job Listings</h2>
+      <button class="btn btn-primary" (click)="openAddJobModal()">Add New Job</button>
+    </div>
+  
+    <!-- Job List -->
+    <div class="row">
+      <div *ngFor="let job of jobs" class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ job.title }}</h5>
+            <p class="card-text">{{ job.description }}</p>
+            <p class="mt-auto"><strong>Location:</strong> {{ job.location }}</p>
+            
+            <div class="d-flex justify-content-between gap-2 mt-3">
+              <button class="btn btn-warning flex-grow-1">Update</button>
+              <button class="btn btn-info flex-grow-1">Details</button>
+              <button class="btn btn-danger flex-grow-1" (click)="deleteJob(job.id)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add Job Modal -->
+    <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add New Job</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label for="title" class="form-label">Job Title</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="title" 
+                  formControlName="title"
+                  [class.is-invalid]="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
+                
+                <div *ngIf="jobForm.get('title')?.errors?.['required'] && jobForm.get('title')?.touched" 
+                     class="invalid-feedback">
+                  Title is required
+                </div>
+                <div *ngIf="jobForm.get('title')?.errors?.['minlength']" 
+                     class="invalid-feedback">
+                  Minimum 3 characters required
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea 
+                  class="form-control" 
+                  id="description" 
+                  rows="3" 
+                  formControlName="description"
+                  [class.is-invalid]="jobForm.get('description')?.invalid && jobForm.get('description')?.touched"></textarea>
+                
+                <div *ngIf="jobForm.get('description')?.errors?.['required'] && jobForm.get('description')?.touched" 
+                     class="invalid-feedback">
+                  Description is required
+                </div>
+                <div *ngIf="jobForm.get('description')?.errors?.['minlength']" 
+                     class="invalid-feedback">
+                  Minimum 10 characters required
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="location" 
+                  formControlName="location"
+                  [class.is-invalid]="jobForm.get('location')?.invalid && jobForm.get('location')?.touched">
+                
+                <div *ngIf="jobForm.get('location')?.errors?.['required'] && jobForm.get('location')?.touched" 
+                     class="invalid-feedback">
+                  Location is required
+                </div>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+                <button type="submit" class="btn btn-primary" [disabled]="jobForm.invalid">Save Job</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'"></div>
+  </div>

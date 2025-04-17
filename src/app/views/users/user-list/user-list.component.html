@@ -1,0 +1,30 @@
+<div class="container">
+    <h2>User List</h2>
+  
+<!-- Table for User Data -->
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Prenom</th>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Nom utilisateur</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let utilisateur of utilisateurs">
+        <td>{{ utilisateur.firstName }}</td>
+        <td>{{ utilisateur.lastName }}</td>
+        <td>{{ utilisateur.email }}</td>
+        <td>{{ utilisateur.username }}</td>
+        <td>{{ utilisateur.role }}</td>
+        <td>
+        
+          <button (click)="deleteUser(utilisateur.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
