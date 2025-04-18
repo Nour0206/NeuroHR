@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
+import { authGuard } from './views/pages/auth.guard';
 
 export const routes: Routes = [
   {
@@ -10,6 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
+
     data: {
       title: 'Home'
     },
@@ -18,14 +20,17 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
-      
       {
-        path: 'offresDeTravail',
+        path: 'users',
         loadChildren: () => import('./views/users/user.routes').then((m) => m.userRoutes)
       },
       {
         path: 'job',
         loadChildren: () => import('./views/hr/job-management/job-management.routes').then((m) => m.jobManagementRoutes)
+      },
+      {
+        path: 'candidate',
+        loadChildren: () => import('./views/candidate/candidate.routes').then((m) => m.CANDIDATE_ROUTES)
       },
       {
         path: 'theme',
@@ -62,7 +67,12 @@ export const routes: Routes = [
       {
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
+      },
+      {
+        path: 'chatbot',
+        loadChildren: () => import('./views/chatbot/routes').then((m) => m.routes)
       }
+      
     ]
   },
   {

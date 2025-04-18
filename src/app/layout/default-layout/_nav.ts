@@ -12,13 +12,23 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'Offres de Travail '
+    name: 'Candidature '
   },
   {
-      name: 'Users',
-    url: '/offresDeTravail',
+    name: 'users',
+    url: '/users',
     iconComponent: { name: 'cil-drop' }
   },
+  {
+    name: 'ChatBot',
+  url: '/chatbot',
+  iconComponent: { name: 'cil-drop' }
+},
+  {
+    name: 'Candidate Management',
+  url: '/candidate',
+  iconComponent: { name: 'icon-people' }
+},
   {
     name: 'Offres De Travail',
   url: '/job',
