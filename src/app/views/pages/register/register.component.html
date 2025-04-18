@@ -39,3 +39,105 @@
     </c-row>
   </c-container>
 </div>
+ -->
+ <div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4">
+          <c-card-body class="p-4">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" cForm>
+              <h1>Register</h1>
+              <p class="text-body-secondary">Create your account</p>
+
+              <!-- Error Message -->
+              <div *ngIf="errorMessage" class="alert alert-danger">
+                {{ errorMessage }}
+              </div>
+
+              <!-- Username Field -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilUser"></svg>
+                </span>
+                <input
+                  formControlName="username"
+                  autoComplete="username"
+                  cFormControl
+                  placeholder="Username"
+                />
+                <div *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.errors" class="invalid-feedback d-block">
+                  <div *ngIf="registerForm.get('username')?.errors?.['required']">Username is required</div>
+                  <div *ngIf="registerForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters</div>
+                </div>
+              </c-input-group>
+
+              <!-- Email Field -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>&#64;</span>
+                <input
+                  formControlName="email"
+                  autoComplete="email"
+                  cFormControl
+                  placeholder="Email"
+                  type="email"
+                />
+                <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors" class="invalid-feedback d-block">
+                  <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</div>
+                  <div *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</div>
+                </div>
+              </c-input-group>
+
+              <!-- Password Field -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLockLocked"></svg>
+                </span>
+                <input
+                  formControlName="password"
+                  autoComplete="new-password"
+                  cFormControl
+                  placeholder="Password"
+                  type="password"
+                />
+                <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors" class="invalid-feedback d-block">
+                  <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</div>
+                  <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+                </div>
+              </c-input-group>
+
+              <!-- Confirm Password Field -->
+              <c-input-group class="mb-4">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLockLocked"></svg>
+                </span>
+                <input
+                  formControlName="confirmPassword"
+                  autoComplete="new-password"
+                  cFormControl
+                  placeholder="Repeat password"
+                  type="password"
+                />
+                <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.errors?.['mismatch']" class="invalid-feedback d-block">
+                  Passwords do not match
+                </div>
+              </c-input-group>
+
+              <div class="d-grid">
+                <button
+                  cButton
+                  color="success"
+                  [disabled]="isLoading || registerForm.invalid"
+                  type="submit"
+                >
+                  <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  {{ isLoading ? 'Creating...' : 'Create Account' }}
+                </button>
+              </div>
+            </form>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

@@ -1,14 +1,6 @@
 {
   "users": [
     {
-      "id": "2",
-      "firstName": "Jane",
-      "lastName": "Smith",
-      "email": "jane.smith@example.com",
-      "role": "hr",
-      "username": "janesmith"
-    },
-    {
       "id": "3",
       "firstName": "Alice",
       "lastName": "Johnson",
@@ -23,6 +15,14 @@
       "email": "bob.white@example.com",
       "role": "admin",
       "username": "bobwhite"
+    },
+    {
+      "id": "9cfd",
+      "firstName": "nour",
+      "lastName": "kh",
+      "email": "nourkhedri0206@gmail.com",
+      "username": "nour",
+      "role": "ADMIN"
     }
   ],
   "jobs": [
@@ -32,13 +32,6 @@
       "description": "Lead projects and coordinate with teams.",
       "location": "San Francisco, CA",
       "postedDate": "2025-04-12T12:00:00Z"
-    },
-    {
-      "id": "3",
-      "title": "UI/UX Designer",
-      "description": "Design user-friendly interfaces and experiences.",
-      "location": "Austin, TX",
-      "postedDate": "2025-04-10T12:00:00Z"
     },
     {
       "id": "be6e",
