@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './education.component.scss'
 })
 export class EducationComponent {
+  activeSection: string = 'resume';
 
+  showSection(section: string): void {
+    this.activeSection = section;
+  }
 }

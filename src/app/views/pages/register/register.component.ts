@@ -5,7 +5,8 @@ import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { RegisterRequest } from '../../../models/registerRequest';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -15,50 +16,34 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule, CommonModule]
 })
 export class RegisterComponent {
-  registerForm: FormGroup;
-  isLoading = false;
-  errorMessage = '';
+  registerForm!: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
   }
 
-
-  private passwordMatchValidator(form: FormGroup) {
-    return form.get('password')?.value === form.get('confirmPassword')?.value
-      ? null
-      : { mismatch: true };
+  passwordMatchValidator(form: FormGroup) {
+    const pass = form.get('password')?.value;
+    const confirm = form.get('confirmPassword')?.value;
+    return pass === confirm ? null : { mismatch: true };
   }
 
-  onSubmit() {
-    if (this.registerForm.invalid) {
-      this.markFormGroupTouched(this.registerForm);
-      return;
+  onSubmit(): void {
+    if (this.registerForm.valid) {
+      this.authService.register(this.registerForm.value).subscribe({
+        next: () => {
+          alert('Account created successfully!');
+          this.router.navigate(['/login']);
+        },
+        error: err => alert('Registration failed')
+      });
     }
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    const { confirmPassword, ...userData } = this.registerForm.value;
-
-
-  }
-
-  private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => {
-      control.markAsTouched();
-
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
-    });
   }
 }
