@@ -6,29 +6,19 @@ import { SkillsComponent } from './skills/skills.component';
 
 export const CANDIDATE_ROUTES: Routes = [
   {
-    path: '', // Base path for all candidate routes
-    component: ProfileComponent, // Main container component
-    children: [
-      { 
-        path: 'education', 
-        component: EducationComponent,
-        title: 'Candidate Education' // Optional title for the route
-      },
-      { 
-        path: 'work-history', 
-        component: WorkHistoryComponent,
-        title: 'Work History'
-      },
-      { 
-        path: 'skills', 
-        component: SkillsComponent,
-        title: 'Candidate Skills'
-      },
-      { 
-        path: '', 
-        redirectTo: 'education', // Default child route
-        pathMatch: 'full'
-      }
-    ]
-  }
+     path: '',
+     component: ProfileComponent,
+   },
+   {
+     path: 'skills',
+     component: SkillsComponent,
+   },
+   {
+     path: 'workhistory',
+     component: WorkHistoryComponent,
+   },
+   {
+     path: 'education',
+     component: EducationComponent,
+   }
 ];

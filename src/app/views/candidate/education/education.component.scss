@@ -1,0 +1,114 @@
+.cv-container {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+  }
+  
+  .sidebar h1, .sidebar h2 {
+    cursor: pointer;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar h1 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 15px;
+  }
+  
+  .sidebar h2 {
+    font-size: 1.1rem;
+    font-weight: normal;
+  }
+  
+  .sidebar h1:hover, .sidebar h2:hover {
+    background-color: #34495e;
+  }
+  
+  .sidebar .active {
+    background-color: #3498db;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 30px;
+    background-color: #f9f9f9;
+  }
+  
+  .section-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .add-button:hover {
+    background-color: #2980b9;
+  }
+  
+  .add-form {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+  }
+  
+  button[type="submit"] {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #219653;
+  }

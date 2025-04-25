@@ -1,59 +1,40 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { signalSetFn } from '@angular/core/primitives/signals';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable,tap  } from 'rxjs';
-import { User } from '../models/user.model';
-
+import { Observable } from 'rxjs';
+import { RegisterRequest } from '../models/registerRequest';
+import { LoginRequest } from '../models/LoginRequest';
+import { AuthResponse } from '../models/AuthResponse';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  isAuthenticated = signal(false);
-  private apiUrl = 'http://localhost:3000/auth';
-  private currentUserSubject = new BehaviorSubject
-  
-  <User | null>(null);
-  currentUser$ = this.currentUserSubject.asObservable();
+  private baseUrl = 'http://localhost:5183/api/auth'; // Change selon ton backend
 
-  constructor(private http: HttpClient, private router: Router) { }
- 
-  // Login method
-  login(username: string, password: string): Observable<User> {
-    return this.http.post<User>('/login', { username, password }).pipe(
-      tap(user => {
-        this.currentUserSubject.next(user);
-        localStorage.setItem('currentUser', JSON.stringify(user));
-      })
-    );
+  constructor(private http: HttpClient) {}
+
+  register(request: RegisterRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register`, request);
   }
 
-  // Logout method
+  login(request: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, request);
+  }
+
+  saveToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   logout(): void {
-    this.currentUserSubject.next(null);
-    localStorage.removeItem('currentUser');
-    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
   }
 
-  // Auto-login from localStorage
-  autoLogin(): void {
-    const userData = localStorage.getItem('currentUser');
-    if (userData) {
-      this.currentUserSubject.next(JSON.parse(userData));
-    }
+  isLoggedIn(): boolean {
+    return !!this.getToken();
   }
-
-  // Check if user is logged in
-  get isLoggedIn(): boolean {
-    return this.currentUserSubject.value !== null;
-  }
-
-  // Get current user role
-  get currentRole(): 'admin' | 'hr' | 'candidate' | null {
-    return this.currentUserSubject.value?.role || null;
-  }
-
-
 }

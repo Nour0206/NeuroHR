@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import {CommonModule, NgStyle} from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
-import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -15,15 +16,26 @@ import { Router } from '@angular/router';
       ,CommonModule]
 })
 export class LoginComponent {
+  loginForm!: FormGroup;
 
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
 
-  constructor( public fb: FormBuilder,
-    public authService: AuthService,
-    public router: Router) { }
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
 
-
-
-
-
-
+  onLogin(): void {
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (res) => {
+          this.authService.saveToken(res.token);
+          this.router.navigate(['/dashboard']); // vers une page protégée
+        },
+        error: () => alert('Invalid credentials')
+      });
+    }
+  }
 }

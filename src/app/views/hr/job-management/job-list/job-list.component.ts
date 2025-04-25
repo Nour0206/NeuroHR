@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
-import { JobService } from 'src/app/services/job.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Job } from 'src/app/models/job';
 
 @Component({
   selector: 'app-job-list',
@@ -17,9 +14,11 @@ import { Job } from 'src/app/models/job';
     ReactiveFormsModule
   ]
 })
-export class JobListComponent implements OnInit {
-  jobs: Job[] = [];
+export class JobListComponent {
+ /*  jobs: Job[] = [];
   showModal = false;
+
+  
   
   // Initialize the form group with default values and validators
   jobForm: FormGroup = this.fb.group({
@@ -76,5 +75,5 @@ export class JobListComponent implements OnInit {
         error: (err) => console.error('Error deleting job:', err)
       });
     }
-  }
+  } */
 }

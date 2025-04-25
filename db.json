@@ -1,14 +1,6 @@
 {
   "users": [
     {
-      "id": "3",
-      "firstName": "Alice",
-      "lastName": "Johnson",
-      "email": "alice.johnson@example.com",
-      "role": "candidate",
-      "username": "alicej"
-    },
-    {
       "id": "4",
       "firstName": "Bob",
       "lastName": "White",
@@ -37,6 +29,12 @@
       "id": "be6e",
       "title": "developer",
       "description": "developper",
+      "location": "sfax"
+    },
+    {
+      "id": "358c",
+      "title": "Chef de projet IT",
+      "description": "Vous serez chargé de:\nPiloter de multiples projets de développement informatique et d’en superviser les différentes étapes d’exécution. \nIdentifier les besoins de l’entreprise ou du client et mener une étude de faisabilité du projet.\nDéfinir l’ensemble de documents nécessaires ( Spécification fonctionnelles, expressions de besoin, cahiers des charges,…etc.) constitués des délais d’exécution, des ressources financières et humaines nécessaires\nMettre en place un calendrier de travail pour répartir les tâches au sein des équipes et contrôle l’état d’avancement du projet.\nAssurer la livraison et la maintenance et propose les évolutions fonctionnelles possibles.\nSuivre l'avancement du projet, ajuster le plan de projet si nécessaire et gérer les risques.\nCoacher les ressources (Design, Développement, Prestataires, etc)\nReporting auprès du client et de la direction \nGarantir la qualité des livrables et la satisfaction client.\nParticiper à l’élaboration des charges du projet (temps nécessaire, alloué et consommé) et les suivre.\nGérer les relations avec les fournisseurs et les sous-traitants.\nMettre en place et suivre les indicateurs de performance clés (KPI) de la gestion des projet.\n",
       "location": "sfax"
     }
   ]
