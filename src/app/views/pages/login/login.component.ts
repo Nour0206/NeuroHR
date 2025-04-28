@@ -22,7 +22,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -36,6 +36,7 @@ export class LoginComponent {
         },
         error: () => alert('Invalid credentials')
       });
+
     }
   }
 }

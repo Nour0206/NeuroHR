@@ -7,8 +7,7 @@ import { Job } from '../models/job';
   providedIn: 'root'
 })
 export class JobService {
-
-  private apiUrl = 'http://localhost:3000/jobs';
+  private apiUrl = 'http://localhost:5183/api/JobPosting';
 
   constructor(private http: HttpClient) {}
 
@@ -16,7 +15,7 @@ export class JobService {
     return this.http.get<Job[]>(this.apiUrl);
   }
 
-  getJobById(id: String): Observable<Job> {
+  getJobById(id: number): Observable<Job> {
     return this.http.get<Job>(`${this.apiUrl}/${id}`);
   }
 
@@ -24,7 +23,7 @@ export class JobService {
     return this.http.post<Job>(this.apiUrl, job);
   }
 
-  updateJob(id: String, job: Job): Observable<Job> {
+  updateJob(id: number, job: Job): Observable<Job> {
     return this.http.put<Job>(`${this.apiUrl}/${id}`, job);
   }
 

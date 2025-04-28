@@ -1,1 +1,86 @@
-<p>job-add works!</p>
+<div class="container my-5">
+  <h1>Add New Job</h1>
+  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="title" class="form-label">Job Title</label>
+      <input type="text" class="form-control" id="title" formControlName="title">
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea class="form-control" id="description" rows="3" formControlName="description"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="location" class="form-label">Location</label>
+      <input type="text" class="form-control" id="location" formControlName="location">
+    </div>
+    <div class="mb-3">
+      <label for="postedDate" class="form-label">Posted Date</label>
+      <input type="date" class="form-control" id="postedDate" formControlName="postedDate">
+    </div>
+    <div class="mb-3">
+      <label for="experience" class="form-label">Experience</label>
+      <select class="form-select" id="experience" formControlName="experience">
+        <option value="NoExperience">No Experience</option>
+        <option value="OneToThreeYears">1 to 3 Years</option>
+        <option value="ThreeToFiveYears">3 to 5 Years</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="contractType" class="form-label">Contract Type</label>
+      <select class="form-select" id="contractType" formControlName="contractType">
+        <option value="Permanent">Permanent</option>
+        <option value="Temporary">Temporary</option>
+        <option value="Internship">Internship</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="domaine" class="form-label">Domain</label>
+      <select class="form-select" id="domaine" formControlName="domaine">
+        <option value="Security">Security</option>
+        <option value="Data">Data</option>
+        <option value="Cloud">Cloud</option>
+        <option value="Network">Network</option>
+        <option value="AI">AI</option>
+        <option value="Web">Web</option>
+        <option value="Mobile">Mobile</option>
+        <option value="Devops">DevOps</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="type" class="form-label">Type</label>
+      <select class="form-select" id="type" formControlName="type">
+        <option value="Onsite">Onsite</option>
+        <option value="Remote">Remote</option>
+        <option value="Hybrid">Hybrid</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="workType" class="form-label">Work Type</label>
+      <select class="form-select" id="workType" formControlName="workType">
+        <option value="FullTime">Full-Time</option>
+        <option value="PartTime">Part-Time</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="profile" class="form-label">Profile</label>
+      <textarea class="form-control" id="profile" rows="3" formControlName="profile"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="keySkills" class="form-label">Key Skills</label>
+      <textarea class="form-control" id="keySkills" rows="3" formControlName="keySkills"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="mission" class="form-label">Mission</label>
+      <textarea class="form-control" id="mission" rows="3" formControlName="mission"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="workingConditions" class="form-label">Working Conditions</label>
+      <textarea class="form-control" id="workingConditions" rows="3" formControlName="workingConditions"></textarea>
+    </div>
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-secondary" routerLink="/job">Cancel</button>
+      <button type="submit" class="btn btn-primary">Add Job</button>
+    </div>
+  </form>
+</div>
