@@ -1,24 +1,17 @@
-.job-list {
-  padding: 20px;
-}
-
 .job-card {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  border: 1px solid #f0f0f0;
 }
 
-.apply-btn {
-  background-color: #007bff;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+a[href="#"] {
+  color: #333;
+  font-weight: 500;
 }
 
-.apply-btn:hover {
-  background-color: #0056b3;
+a[href="#"]:hover {
+  color: #0d6efd;
+  text-decoration: underline;
+}
+
+.btn-primary {
+  font-weight: 500;
 }

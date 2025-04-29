@@ -1,4 +1,4 @@
-<div class="container my-5">
+<!-- <div class="container my-5">
   <h1>Add New Job</h1>
   <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
@@ -84,3 +84,84 @@
     </div>
   </form>
 </div>
+ -->
+ <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+
+  <div>
+    <label>Title</label>
+    <input formControlName="title" type="text" />
+  </div>
+
+  <div>
+    <label>Description</label>
+    <textarea formControlName="description"></textarea>
+  </div>
+
+  <div>
+    <label>Location</label>
+    <input formControlName="location" type="text" />
+  </div>
+
+  <div>
+    <label>Posted Date</label>
+    <input formControlName="postedDate" type="date" />
+  </div>
+
+  <div>
+    <label>Experience Level</label>
+    <select formControlName="experience">
+      <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Contract Type</label>
+    <select formControlName="contractType">
+      <option *ngFor="let contract of contractTypes" [value]="contract.value">{{ contract.label }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Profile</label>
+    <input formControlName="profile" type="text" />
+  </div>
+
+  <div>
+    <label>Key Skills</label>
+    <input formControlName="keySkills" type="text" />
+  </div>
+
+  <div>
+    <label>Mission</label>
+    <textarea formControlName="mission"></textarea>
+  </div>
+
+  <div>
+    <label>Working Conditions</label>
+    <textarea formControlName="workingConditions"></textarea>
+  </div>
+
+  <div>
+    <label>Domain</label>
+    <select formControlName="domaine">
+      <option *ngFor="let domain of domains" [value]="domain.value">{{ domain.label }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Job Type</label>
+    <select formControlName="type">
+      <option *ngFor="let type of jobTypes" [value]="type.value">{{ type.label }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Work Type</label>
+    <select formControlName="workType">
+      <option *ngFor="let work of workTypes" [value]="work.value">{{ work.label }}</option>
+    </select>
+  </div>
+
+  <button type="submit" [disabled]="jobForm.invalid">Submit</button>
+
+</form>

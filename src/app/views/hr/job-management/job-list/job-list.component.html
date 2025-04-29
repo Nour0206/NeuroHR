@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="title">Available Jobs</h1>
     <button cButton class="btn btn-primary" routerLink="/job/add">Add Job</button>
@@ -26,6 +26,56 @@
         <p><strong>Mission:</strong> {{ job.mission }}</p>
         <p><strong>Working Conditions:</strong> {{ job.workingConditions }}</p>
       </details>
+    </div>
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Available Jobs</h1>
+    <button class="btn btn-primary" routerLink="/job/add">Add Job</button>
+  </div>
+
+  <div *ngIf="jobs.length === 0" class="alert alert-info">
+    No jobs available at the moment.
+  </div>
+
+  <div *ngIf="jobs.length > 0">
+    <div *ngFor="let job of jobs" class="job-card mb-4 p-4 bg-white rounded">
+      <!-- Job Title & Company -->
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div>
+          <h2 class="h4 mb-1">{{ job.title }}</h2>
+          <h3 class="h5 text-muted mb-2">{{ job.location || 'We Comm And Co' }}</h3>
+        </div>
+        <span class="badge bg-secondary">{{ job.domaine }}</span>
+      </div>
+
+      <!-- Date & Badges -->
+      <div class="d-flex align-items-center mb-3">
+        <span class="text-muted me-3 small">{{ job.postedDate | date:'d MMM. y' }}</span>
+        <span class="badge bg-light text-dark me-2">{{ job.experience }}</span>
+        <span class="badge bg-light text-dark me-2">{{ job.contractType }}</span>
+        <span class="badge bg-light text-dark">{{ job.location }}</span>
+      </div>
+
+      <!-- Description -->
+      <p class="mb-3">{{ job.description }}</p>
+
+      <!-- Tags -->
+      <div class="mb-3">
+        <span class="badge bg-light text-dark me-2">#{{ job.domaine }}</span>
+        <span *ngFor="let skill of job.keySkills.split(',')" 
+              class="badge bg-light text-dark me-2">
+          #{{ skill.trim() }}
+        </span>
+      </div>
+
+      <!-- Action Buttons - EXACT MATCH TO YOUR IMAGE -->
+      <div class="d-flex justify-content-between border-top pt-3">
+        <a class="text-decoration-none">Voir plus</a>
+        <button class="btn btn-primary btn-sm px-3">Postuler</button>
+      </div>
     </div>
   </div>
 </div>
