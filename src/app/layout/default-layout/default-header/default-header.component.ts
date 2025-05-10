@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { IconDirective } from '@coreui/icons-angular';
 
 import {
   AvatarComponent,
@@ -21,8 +22,9 @@ import {
   NavLinkDirective,
   SidebarToggleDirective
 } from '@coreui/angular';
+import { AuthService } from '../../../services/auth.service';
 
-import { IconDirective } from '@coreui/icons-angular';
+
 
 @Component({
     selector: 'app-default-header',
@@ -45,9 +47,56 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
   });
 
-  constructor() {
+ /*  constructor(private authService: AuthService, private router: Router) {
     super();
   }
+  
+  username: string = '';
+  
+  ngOnInit(): void {
+    const userInfo = this.authService.getUserInfo();
+    if (userInfo && userInfo.username) {
+      this.username = userInfo.username;
+    }
+  }
+  
+  logout(): void {
+    this.authService.logout(); // Call the logout method from AuthService
+    this.router.navigate(['/login']); // Redirect to the login page after logout
+  }
+   */
+
+
+  username: string = '';
+  
+  constructor(private authService: AuthService, private router: Router) {
+    super();
+  }
+  
+  /* ngOnInit(): void {
+    this.updateUserInfo();
+    // Écouter les changements d'état d'authentification si nécessaire
+  }
+   */
+
+
+  ngOnInit(): void {
+    const userInfo = this.authService.getUserInfo();
+    if (userInfo) {
+      this.username = userInfo.username;
+    }
+  }
+  private updateUserInfo(): void {
+    const userInfo = this.authService.getUserInfo();
+    this.username = userInfo?.username || '';
+  }
+  
+  logout(): void {
+    this.authService.logout();
+    this.username = ''; // Réinitialiser le nom d'utilisateur
+    this.router.navigate(['/login']);
+  }
+
 
   sidebarId = input('sidebar1');
 

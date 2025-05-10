@@ -1,4 +1,4 @@
-<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+<!-- <div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
   <c-container breakpoint="md">
     <c-row class="justify-content-center">
       <c-col lg="10" xl="8">
@@ -19,6 +19,11 @@
                     formControlName="email"
                   />
                 </c-input-group>
+
+                <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-danger mb-2">
+  <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
+  <div *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format.</div>
+</div>
                 <c-input-group class="mb-4">
                   <span cInputGroupText>
                     <svg cIcon name="cilLockLocked"></svg>
@@ -31,6 +36,9 @@
                     type="password"
                   />
                 </c-input-group>
+                <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-danger mb-2">
+  <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
+</div>
                 <c-row>
                   <c-col xs="6">
                     <button cButton class="px-4" color="primary" type="submit">
@@ -50,7 +58,7 @@
             <c-card-body class="text-center">
               <div>
                 <h2>Sign up</h2>
-                <button cButton class="mt-3" color="primary"  routerLink="/register">
+                <button cButton class="mt-3" color="success" routerLink="/register">
                   Register Now!
                 </button>
               </div>
@@ -61,3 +69,124 @@
     </c-row>
   </c-container>
 </div>
+ -->
+<div class="auth-container">
+  <c-container breakpoint="md">
+    <c-row class="justify-content-center">
+      <c-col lg="10" xl="8">
+        <div class="auth-card-wrapper">
+          <!-- Login Card -->
+          <c-card class="auth-card login-card">
+            <c-card-body>
+              <div class="auth-header">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Login to your account</p>
+              </div>
+              
+              <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+                <!-- Email Field -->
+                <div class="form-group">
+                  <c-input-group>
+                    <span cInputGroupText class="input-icon">
+                      <svg cIcon name="cilEnvelopeOpen"></svg>
+                    </span>
+                    <input 
+                      formControlName="email"
+                      cFormControl
+                      placeholder="Email address"
+                      class="form-input"
+                    />
+                  </c-input-group>
+                  <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error-message">
+                    <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</div>
+                    <div *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</div>
+                  </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                  <c-input-group>
+                    <span cInputGroupText class="input-icon">
+                      <svg cIcon name="cilLockLocked"></svg>
+                    </span>
+                    <input
+                      formControlName="password"
+                      type="password"
+                      cFormControl
+                      placeholder="Password"
+                      class="form-input"
+                    />
+                    <button cButton type="button" color="light" class="toggle-password" (click)="togglePasswordVisibility()">
+                      <svg cIcon [name]="showPassword ? 'cilEye' : 'cilEyeSlash'"></svg>
+                    </button>
+                  </c-input-group>
+                  <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error-message">
+                    <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</div>
+                  </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="form-options">
+                  <label class="remember-me">
+                    <input type="checkbox" formControlName="rememberMe"> Remember me
+                  </label>
+                  <a routerLink="/forgot-password" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                  cButton 
+                  color="primary" 
+                  type="submit" 
+                  class="auth-button"
+                  [disabled]="loginForm.invalid"
+                >
+                  Login
+                </button>
+
+                <!-- Social Login -->
+                <div class="social-login">
+                  <p class="divider"><span>Or continue with</span></p>
+                  <div class="social-buttons">
+                    <button cButton color="light" class="social-button">
+                      <svg cIcon name="cibGoogle"></svg> Google
+                    </button>
+                    <button cButton color="light" class="social-button">
+                      <svg cIcon name="cibFacebook"></svg> Facebook
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </c-card-body>
+          </c-card>
+
+          <!-- Register Card -->
+          <c-card class="auth-card register-card">
+            <c-card-body>
+              <div class="auth-header">
+                <h1 class="auth-title">Create Account</h1>
+              </div>
+              <button 
+                cButton 
+                color="outline-light" 
+                class="auth-button register-button"
+                routerLink="/register"
+              >
+                Sign up
+              </button>
+            </c-card-body>
+          </c-card>
+        </div>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
+<div id="g_id_onload"
+  data-client_id="721840243575-huqbncs3rme0n04snvgs12u89gi54hm5.apps.googleusercontent.com"
+  data-context="signin"
+  data-login_uri="http://localhost:5183/api/auth/login" 
+  data-auto_select="true"
+  data-itp_support="true">
+</div>
+<!-- Optional: Add a custom button if you want -->
+<div id="googleLoginButton"></div>

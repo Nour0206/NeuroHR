@@ -26,8 +26,8 @@ export const appConfig: ApplicationConfig = {
       }),
       
       withEnabledBlockingInitialNavigation(),
-      withViewTransitions(),
-      withHashLocation()
+      withViewTransitions()
+   
        
     ),
     provideHttpClient(),
