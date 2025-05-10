@@ -3,7 +3,7 @@ import { IconDirective } from '@coreui/icons-angular';
 import { ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-register',
@@ -15,24 +15,28 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterComponent {
   registerForm!: FormGroup;
-
+  showPassword = false;
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
       userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['',[ Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    const pass = form.get('password')?.value;
+  passwordMatchValidator(): ValidatorFn {
+  return (form: AbstractControl): ValidationErrors | null => {
+    const password = form.get('password')?.value;
     const confirm = form.get('confirmPassword')?.value;
-    return pass === confirm ? null : { mismatch: true };
+    return password === confirm ? null : { passwordMismatch: true };
+  };
+}
+   togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
-
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
@@ -45,3 +49,5 @@ export class RegisterComponent {
     }
   }
 }
+
+

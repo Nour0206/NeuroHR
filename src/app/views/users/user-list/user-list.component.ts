@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { User } from '../../../models/user.model';
 import { CommonModule } from '@angular/common';
-import { UserService } from 'src/app/services/user.service';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   standalone: true,
@@ -13,24 +14,34 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
 })
+
+
+/* @Pipe({
+  name: 'roleFilter'
+})
+export class RoleFilterPipe implements PipeTransform {
+  transform(users: User[], selectedRole: string): User[] {
+    if (!selectedRole) return users;
+    return users.filter(user => user.role === selectedRole);
+  }
+} */
 export class UserListComponent  implements OnInit {
+  roleFilter: string = '';
   utilisateurs: User[] = [];
   showModal = false;
   isEditMode = false;
-  currentUserId: number | null = null;
+  currentUserId: string | null = null;
 
   userForm: FormGroup = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
+    name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     username: ['', Validators.required],
-    role: ['USER', Validators.required]
+    password: ['', Validators.required],
+    role: ['candidate', Validators.required]
   });
 
-  constructor(
-    private userService: UserService,
-    private fb: FormBuilder
-  ) {}
+  constructor(private userService: UserService,private fb: FormBuilder
+) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -39,7 +50,7 @@ export class UserListComponent  implements OnInit {
   loadUsers(): void {
     this.userService.getUsers().subscribe({
       next: (users) => {this.utilisateurs = users
-        console.log(users)
+        console.log(users);
       },
       error: (err) => console.error('Error loading users:', err)
     });
@@ -56,8 +67,7 @@ export class UserListComponent  implements OnInit {
     this.isEditMode = true;
     this.currentUserId = user.id;
     this.userForm.patchValue({
-      firstName: user.firstName,
-      lastName: user.lastName,
+      name: user.name,
       email: user.email,
       username: user.username,
       role: user.role
@@ -88,7 +98,7 @@ export class UserListComponent  implements OnInit {
     }
   }
 
-  deleteUser(id: number): void {
+  deleteUser(id: string): void {
     if (confirm('Are you sure you want to delete this user?')) {
       this.userService.deleteUser(id).subscribe({
         next: () => this.loadUsers(),
@@ -96,30 +106,7 @@ export class UserListComponent  implements OnInit {
       });
     }
   }
-  /* utilisateurs: User[] = []; // This will hold the list of users
-  userForm: FormGroup;
-  isEditMode = false;
-  currentUserId: number | null = null;
-
-
-
-
-
-  constructor(private userService: UserService,private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.loadUsers();
-  }
-
-  loadUsers(): void {
-    this.userService.getUsers().subscribe((users) => {
-      this.utilisateurs = users;
-    });
-  }
-
-  deleteUser(id: number): void {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.loadUsers(); // Reload users after deletion
-    });
-  } */
+ setRoleFilter(role: string): void {
+  this.roleFilter = role;
+}
 }

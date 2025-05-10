@@ -11,6 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
+    
 
     data: {
       title: 'Home'
@@ -18,32 +19,23 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        canActivate: [AuthGuard] ,
-        loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes),
+        canActivate: [AuthGuard]
       },
       {
         path: 'users',
-        loadChildren: () => import('./views/users/user.routes').then((m) => m.userRoutes)
+        loadChildren: () => import('./views/users/user.routes').then((m) => m.userRoutes),
+        canActivate: [AuthGuard]
       },
-      {
+       {
         path: 'job',
-        loadChildren: () => import('./views/hr/job-management/job-management.routes').then((m) => m.jobManagementRoutes)
-      },
+        loadChildren: () => import('./views/hr/job-management/job-management.routes').then((m) => m.jobManagementRoutes),
+        canActivate: [AuthGuard]
+      }, 
       {
         path: 'candidate',
-        loadChildren: () => import('./views/candidate/candidate.routes').then((m) => m.CANDIDATE_ROUTES)
-      },
-      {
-        path: 'theme',
-        loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
-      },
-      {
-        path: 'base',
-        loadChildren: () => import('./views/base/routes').then((m) => m.routes)
-      },
-      {
-        path: 'buttons',
-        loadChildren: () => import('./views/buttons/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/candidate/candidate.routes').then((m) => m.CANDIDATE_ROUTES),
+        canActivate: [AuthGuard]
       },
       {
         path: 'forms',

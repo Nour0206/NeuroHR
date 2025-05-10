@@ -10,7 +10,7 @@ import { User } from '../models/user.model';
 })
 export class UserService {
  
-  private apiUrl = 'http://localhost:3000/users'; // JSON Server API URL
+  private apiUrl = 'http://localhost:5183/api/User';
   constructor(private http: HttpClient) { }
 
 
@@ -22,12 +22,12 @@ export class UserService {
     return this.http.post<User>(this.apiUrl, user);
   }
 
-  deleteUser(id: number): Observable<void> {
+  deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
 
-  updateUser(id: number, user: User): Observable<User> {
+  updateUser(id: string, user: User): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user);
   }
 

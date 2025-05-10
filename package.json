@@ -38,6 +38,7 @@
     "@coreui/utils": "^2.0.2",
     "axios": "^1.8.4",
     "chart.js": "^4.4.8",
+    "jwt-decode": "^4.0.0",
     "lodash-es": "^4.17.21",
     "ngx-cookie-service": "^19.1.2",
     "ngx-scrollbar": "^13.0.3",
