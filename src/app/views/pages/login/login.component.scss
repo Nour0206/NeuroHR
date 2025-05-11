@@ -1,4 +1,4 @@
-.login-container {
+/* .login-container {
     max-width: 400px;
     margin: 2rem auto;
     padding: 2rem;
@@ -39,4 +39,223 @@
   
   .login-button:disabled {
     background-color: #cccccc;
+  } */
+
+
+
+  .auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+}
+
+.auth-card-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.auth-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: none;
+}
+
+.login-card {
+  background: #ffffff;
+}
+
+.register-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.register-card .auth-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.input-icon {
+  background-color: #f8f9fa;
+}
+
+.form-input {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s;
+}
+
+.form-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.toggle-password {
+  background-color: #f8f9fa;
+  border-left: 1px solid #e9ecef;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.forgot-password {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.register-button {
+  margin-top: 2rem;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.register-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+.social-login {
+  margin-top: 1.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.divider span {
+  padding: 0 1rem;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.register-features {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.feature-icon {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.app-download {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.app-download p {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.download-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.download-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .auth-card-wrapper {
+    grid-template-columns: 1fr;
   }
+  
+  .register-card {
+    order: -1;
+  }
+}

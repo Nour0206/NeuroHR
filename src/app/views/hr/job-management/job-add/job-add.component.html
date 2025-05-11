@@ -1,72 +1,65 @@
-<div class="form-container">
-  <h2 class="form-title">Post a New Job</h2>
-  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="job-form">
+<form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
 
-    <div class="form-group">
-      <label class="form-label">Title</label>
-      <input class="form-input" formControlName="title" type="text" placeholder="Enter job title" />
-    </div>
+  <div>
+    <label>Title</label>
+    <input formControlName="title" type="text" />
+  </div>
 
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <textarea class="form-textarea" formControlName="description" placeholder="Enter job description" rows="4"></textarea>
-    </div>
+  <div>
+    <label>Description</label>
+    <textarea formControlName="description"></textarea>
+  </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Location</label>
-        <input class="form-input" formControlName="location" type="text" title="Location" placeholder="Enter location" />
-      </div>
+  <div>
+    <label>Location</label>
+    <input formControlName="location" type="text" />
+  </div>
 
-      <div class="form-group">
-        <label class="form-label">Posted Date</label>
-        <input class="form-input" formControlName="postedDate" type="date" title="Posted Date" />
-      </div>
-    </div>
+  <div>
+    <label>Posted Date</label>
+    <input formControlName="postedDate" type="date" />
+  </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Experience Level</label>
-        <select class="form-select" formControlName="experience" title="Experience Level">
-          <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
-        </select>
-      </div>
+  <div>
+    <label>Experience Level</label>
+    <select formControlName="experience">
+      <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
+    </select>
+  </div>
 
-      <div class="form-group">
-        <label class="form-label">Contract Type</label>
-        <select class="form-select" formControlName="contractType" title="Contract Type">
-          <option *ngFor="let contract of contractTypes" [value]="contract.value">{{ contract.label }}</option>
-        </select>
-      </div>
-    </div>
+  <div>
+    <label>Contract Type</label>
+    <select formControlName="contractType">
+      <option *ngFor="let contract of contractTypes" [value]="contract.value">{{ contract.label }}</option>
+    </select>
+  </div>
 
-    <div class="form-group">
-      <label class="form-label">Profile</label>
-      <input class="form-input" formControlName="profile" type="text" title="Profile" placeholder="Enter profile" />
-    </div>
+  <div>
+    <label>Profile</label>
+    <input formControlName="profile" type="text" />
+  </div>
 
-    <div class="form-group">
-      <label class="form-label">Key Skills</label>
-      <input class="form-input" formControlName="keySkills" type="text" title="Key Skills" placeholder="Enter comma-separated skills" />
-    </div>
+  <div>
+    <label>Key Skills</label>
+    <input formControlName="keySkills" type="text" />
+  </div>
 
-    <div class="form-group">
-      <label class="form-label">Mission</label>
-      <textarea class="form-textarea" formControlName="mission" title="Mission" placeholder="Enter mission details" rows="3"></textarea>
-    </div>
+  <div>
+    <label>Mission</label>
+    <textarea formControlName="mission"></textarea>
+  </div>
 
-    <div class="form-group">
-      <label class="form-label">Working Conditions</label>
-      <textarea class="form-textarea" formControlName="workingConditions" title="Working Conditions" placeholder="Enter working conditions" rows="3"></textarea>
-    </div>
+  <div>
+    <label>Working Conditions</label>
+    <textarea formControlName="workingConditions"></textarea>
+  </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Domain</label>
-        <select class="form-select" formControlName="domaine" title="Domain">
-          <option *ngFor="let domain of domains" [value]="domain.value">{{ domain.label }}</option>
-        </select>
-      </div>
+  <div>
+    <label>Domain</label>
+    <select formControlName="domaine">
+      <option *ngFor="let domain of domains" [value]="domain.value">{{ domain.label }}</option>
+    </select>
+  </div>
 
       <div class="form-group">
         <label class="form-label">Job Type</label>

@@ -2,98 +2,84 @@ import { Component, OnInit } from '@angular/core';
 import { JobService } from '../../../../services/job.service';
 import { Job } from '../../../../models/job';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../../../services/auth.service';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-job-list',
   templateUrl: './job-list.component.html',
   styleUrls: ['./job-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule]
+  imports: [CommonModule,FormsModule,ReactiveFormsModule, RouterModule]
 })
 export class JobListComponent implements OnInit {
   jobs: Job[] = [];
-  showCard: { [key: number]: boolean } = {};
-  selectedFile: File | null = null;
-  form: FormGroup;
+  selectedDomaine: string = '';
+  selectedContractType: string = '';
+  userRole: string = '';
 
-  constructor(
-    private jobService: JobService,
-    private http: HttpClient,
-    private route: ActivatedRoute,
-    private fb: FormBuilder
-  ) {
-    this.form = this.fb.group({ resume: null });
-  }
+  domaines = [
+    { value: 'Security', label: 'Security' },
+    { value: 'Data', label: 'Data' },
+    { value: 'Cloud', label: 'Cloud' },
+    { value: 'Network', label: 'Network' },
+    { value: 'AI', label: 'AI' },
+    { value: 'Web', label: 'Web' },
+    { value: 'Mobile', label: 'Mobile' },
+    { value: 'DevOps', label: 'DevOps' },
+    { value: 'Other', label: 'Other' }
+  ];
+
+  contractTypes = [
+    { value: 'Permanent', label: 'Permanent' },
+    { value: 'Temporary', label: 'Temporary' },
+    { value: 'Internship', label: 'Internship' }
+  ];
+
+
+
+  constructor(private jobService: JobService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadJobs();
+    // this.userRole = this.authService.getUserRole();
   }
-
-  loadJobs(): void {
+  // Add to your component class
+toggleDetails(job: any) {
+  job.showDetails = !job.showDetails;
+}
+   /* loadJobs(): void {
     this.jobService.getJobs().subscribe({
       next: (data) => (this.jobs = data),
       error: (err) => console.error('Error fetching jobs:', err)
-    });
-  }
-
-  toggleCard(jobId: number) {
-    this.showCard[jobId] = !this.showCard[jobId];
-  }
-
-  onFileChange(event: any) {
-    if (event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
-    }
-  }
-
-  apply(jobId: number) {
-    if (!this.selectedFile) return;
-
-    this.jobService.getJobById(jobId).subscribe((jobDetails) => {
-      const pythonFormData = new FormData();
-      pythonFormData.append('resume', this.selectedFile!);
-      pythonFormData.append('jobDetails', JSON.stringify(jobDetails));
-
-      this.http.post<any>('http://localhost:5000/evaluate', pythonFormData).subscribe((result) => {
-        const formData = new FormData();
-
-        formData.append('resume', this.selectedFile!, this.selectedFile!.name);
-        formData.append('jobPostingId', jobId.toString());
-        formData.append('status', 'Pending');
-        formData.append('JDMatchPercentage', result.JDMatchPercentage?.toString() ?? '0');
+    }); */
 
 
-        // Ensure required fields are present
-        const missingKeywords = result.MissingKeywords?.toString().trim() || 'N/A';
-        const matchingKeywords = Array.isArray(result.MatchingKeywords)
-          ? result.MatchingKeywords.join(', ')
-          : (result.MatchingKeywords?.toString().trim() || 'N/A');
-        const profileSummary = result.ProfileSummary?.toString().trim() || 'N/A';
-        formData.append('missingKeywords', missingKeywords);
-        formData.append('matchingKeywords', matchingKeywords);
-        formData.append('profileSummary', profileSummary);
-        const JobMatch = result.JDMatchPercentage?.toString();
-        // Optional field if needed
-        formData.append('resumeUrl', '');
-
-        console.log('Final form fields:', { jobId, matchingKeywords,JobMatch ,missingKeywords, profileSummary });
-
-        this.http.post('http://localhost:5183/api/JobApplication', formData).subscribe({
-          next: () => alert('Application submitted successfully!'),
-          error: (err) => {
-            console.error('Error submitting application:', err);
-            if (err.error && err.error.errors) {
-              console.error('Validation Errors:', err.error.errors);
-            }
-          }
-        });
+    loadJobs(): void {
+      this.jobService.getJobs(this.selectedDomaine, this.selectedContractType).subscribe({
+        next: (data) => {
+          this.jobs = data;
+        },
+        error: (err) => {
+          console.error('Error fetching jobs:', err);
+        }
       });
-    });
-  }
+    }
+
+
+    /*  onEdit(id: number): void {
+    this.router.navigate(['/job/update', id]);
+  } */
+
+
+     onDelete(id: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce job ?')) {
+      this.jobService.deleteJob(id).subscribe(() => {
+        this.loadJobs(); // Recharge la liste
+      });
+    }}
+
+
 
 
 }

@@ -55,7 +55,7 @@
   </c-container>
 </ng-container>
 <!--</c-header>-->
-
+<span class="fw-bold text-primary" *ngIf="username">Bonjour, {{ username }}</span>
 <ng-template #userDropdown>
   <c-dropdown [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
     <button [caret]="false" cDropdownToggle class="py-0 pe-0" aria-label="Open user menu">
@@ -143,14 +143,9 @@
       <li>
         <hr cDropdownDivider />
       </li>
+      
       <li>
-        <a cDropdownItem routerLink="">
-          <svg cIcon class="me-2" name="cilLockLocked"></svg>
-          Lock Account
-        </a>
-      </li>
-      <li>
-        <a cDropdownItem routerLink="">
+        <a cDropdownItem (click)="logout()">
           <svg cIcon class="me-2" name="cilAccountLogout"></svg>
           Logout
         </a>

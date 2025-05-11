@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JobService } from  '../../../../services/job.service';
@@ -10,7 +10,7 @@ import { JobService } from  '../../../../services/job.service';
   templateUrl: './job-add.component.html',
   styleUrls: ['./job-add.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class JobAddComponent {
   jobForm!: FormGroup;
@@ -40,8 +40,8 @@ export class JobAddComponent {
 
   experienceLevels = [
     { value: 'NoExperience', label: 'No Experience' },
-    { value: 'OneToThreeYears', label: '1 to 3 Years' },
-    { value: 'ThreeToFiveYears', label: '3 to 5 Years' }
+    { value: '1 to 3 Years', label: '1 to 3 Years' },
+    { value: '3 to 5 Years', label: '3 to 5 Years' }
   ];
 
   contractTypes = [

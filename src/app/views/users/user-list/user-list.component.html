@@ -1,3 +1,4 @@
+
 <div class="container">
     <h2>User List</h2>
 
@@ -8,7 +9,6 @@
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
-        <th>Prenom</th>
         <th>Nom</th>
         <th>Email</th>
         <th>Nom utilisateur</th>
@@ -18,8 +18,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let utilisateur of utilisateurs">
-        <td>{{ utilisateur.firstName }}</td>
-        <td>{{ utilisateur.lastName }}</td>
+       
+        <td>{{ utilisateur.name }}</td>
         <td>{{ utilisateur.email }}</td>
         <td>{{ utilisateur.username }}</td>
         <td>{{ utilisateur.role }}</td>
@@ -41,7 +41,7 @@
 
 <!-- User Form Modal -->
 <div class="modal" [class.show]="showModal" style="display: block" *ngIf="showModal">
-  <div class="modal-dialog">
+  <div class="modal-dialog  modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{{ isEditMode ? 'Edit User' : 'Add User' }}</h5>
@@ -50,12 +50,8 @@
       <div class="modal-body">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
           <div class="mb-3">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" formControlName="firstName">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" formControlName="lastName">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="name">
           </div>
           <div class="mb-3">
             <label class="form-label">Email</label>
@@ -66,11 +62,15 @@
             <input type="text" class="form-control" formControlName="username">
           </div>
           <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" formControlName="password">
+          </div>
+          <div class="mb-3">
             <label class="form-label">Role</label>
             <select class="form-select" formControlName="role">
-              <option value="USER">User</option>
-              <option value="ADMIN">Admin</option>
-              <option value="ADMIN">Candidate</option>
+              <option value="Admin">Admin</option>
+              <option value="HR">HR</option>
+              <option value="CANDIDATE">Candidate</option>
             </select>
           </div>
           <div class="modal-footer">
