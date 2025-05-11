@@ -1,1 +1,100 @@
-<p>job-details works!</p>
+<div class="job-details-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading job details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-state">
+    <div class="error-icon">!</div>
+    <p class="error-message">{{ error }}</p>
+    <a routerLink="/jobs" class="back-link">← Back to Jobs</a>
+  </div>
+
+  <!-- Job Details -->
+  <div *ngIf="job && !isLoading" class="job-card">
+    <header class="job-header">
+      <h1 class="job-title">{{ job.title }}</h1>
+
+      <div class="job-meta">
+        <span class="meta-item">
+          <i class="fas fa-map-marker-alt"></i>
+          {{ job.location }}
+        </span>
+
+        <span class="meta-item">
+          <i class="fas fa-briefcase"></i>
+          {{ getWorkType() }}
+        </span>
+
+        <span class="meta-item">
+          <i class="fas fa-calendar-alt"></i>
+          Posted {{ formatDate(job.postedDate) }}
+        </span>
+      </div>
+    </header>
+
+    <main class="job-content">
+      <section class="job-section">
+        <h2>Job Description</h2>
+        <p class="job-text">{{ job.description }}</p>
+      </section>
+
+      <section class="job-section">
+        <h2>Profile Requirements</h2>
+        <p class="job-text">{{ job.profile }}</p>
+      </section>
+
+      <section class="job-section">
+        <h2>Key Skills</h2>
+        <div class="skills-container">
+          <span *ngFor="let skill of getSkillsArray()" class="skill-tag">
+            {{ skill }}
+          </span>
+        </div>
+      </section>
+
+      <section class="job-section">
+        <h2>Mission</h2>
+        <p class="job-text">{{ job.mission }}</p>
+      </section>
+
+      <section class="job-section">
+        <h2>Working Conditions</h2>
+        <p class="job-text">{{ job.workingConditions }}</p>
+      </section>
+
+      <div class="details-grid">
+        <div class="detail-card">
+          <h3>Experience</h3>
+          <p>{{ getExperience() }}</p>
+        </div>
+
+        <div class="detail-card">
+          <h3>Contract Type</h3>
+          <p>{{ getContractType() }}</p>
+        </div>
+
+        <div class="detail-card">
+          <h3>Domain</h3>
+          <p>{{ getDomain() }}</p>
+        </div>
+
+        <div class="detail-card">
+          <h3>Job Type</h3>
+          <p>{{ getJobType() }}</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="job-footer">
+      <a routerLink="/jobs" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+      </a>
+      <a [routerLink]="['/jobs/edit', job.id]" class="btn btn-primary">
+        <i class="fas fa-edit"></i> Edit Job
+      </a>
+    </footer>
+  </div>
+</div>

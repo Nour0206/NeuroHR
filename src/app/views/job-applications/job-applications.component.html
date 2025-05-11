@@ -1,0 +1,17 @@
+<div *ngIf="isLoading" class="loading">Loading applications...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="!isLoading && applications.length === 0">
+  No applications submitted yet.
+</div>
+
+<div class="app-list" *ngIf="applications.length > 0">
+  <div class="app-card" *ngFor="let app of applications">
+    <h3>Job ID: {{ app.jobId }}</h3>
+    <p><strong>Matching Keywords:</strong> {{ app.matchingKeywords }}</p>
+    <p><strong>Missing Keywords:</strong> {{ app.missingKeywords }}</p>
+    <p><strong>Profile Summary:</strong> {{ app.profileSummary }}</p>
+    <p><strong>JD Match %:</strong> {{ app.jdMatchPercentage }}%</p>
+  <button (click)="deleteApplication(app.id)">Delete</button>
+</div>
+</div>

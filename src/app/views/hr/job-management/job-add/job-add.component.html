@@ -1,167 +1,90 @@
-<!-- <div class="container my-5">
-  <h1>Add New Job</h1>
-  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="title" class="form-label">Job Title</label>
-      <input type="text" class="form-control" id="title" formControlName="title">
+<div class="form-container">
+  <h2 class="form-title">Post a New Job</h2>
+  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="job-form">
+
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" formControlName="title" type="text" placeholder="Enter job title" />
     </div>
-    <div class="mb-3">
-      <label for="description" class="form-label">Description</label>
-      <textarea class="form-control" id="description" rows="3" formControlName="description"></textarea>
+
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" formControlName="description" placeholder="Enter job description" rows="4"></textarea>
     </div>
-    <div class="mb-3">
-      <label for="location" class="form-label">Location</label>
-      <input type="text" class="form-control" id="location" formControlName="location">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input class="form-input" formControlName="location" type="text" title="Location" placeholder="Enter location" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Posted Date</label>
+        <input class="form-input" formControlName="postedDate" type="date" title="Posted Date" />
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="postedDate" class="form-label">Posted Date</label>
-      <input type="date" class="form-control" id="postedDate" formControlName="postedDate">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Experience Level</label>
+        <select class="form-select" formControlName="experience" title="Experience Level">
+          <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contract Type</label>
+        <select class="form-select" formControlName="contractType" title="Contract Type">
+          <option *ngFor="let contract of contractTypes" [value]="contract.value">{{ contract.label }}</option>
+        </select>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="experience" class="form-label">Experience</label>
-      <select class="form-select" id="experience" formControlName="experience">
-        <option value="NoExperience">No Experience</option>
-        <option value="OneToThreeYears">1 to 3 Years</option>
-        <option value="ThreeToFiveYears">3 to 5 Years</option>
-      </select>
+
+    <div class="form-group">
+      <label class="form-label">Profile</label>
+      <input class="form-input" formControlName="profile" type="text" title="Profile" placeholder="Enter profile" />
     </div>
-    <div class="mb-3">
-      <label for="contractType" class="form-label">Contract Type</label>
-      <select class="form-select" id="contractType" formControlName="contractType">
-        <option value="Permanent">Permanent</option>
-        <option value="Temporary">Temporary</option>
-        <option value="Internship">Internship</option>
-      </select>
+
+    <div class="form-group">
+      <label class="form-label">Key Skills</label>
+      <input class="form-input" formControlName="keySkills" type="text" title="Key Skills" placeholder="Enter comma-separated skills" />
     </div>
-    <div class="mb-3">
-      <label for="domaine" class="form-label">Domain</label>
-      <select class="form-select" id="domaine" formControlName="domaine">
-        <option value="Security">Security</option>
-        <option value="Data">Data</option>
-        <option value="Cloud">Cloud</option>
-        <option value="Network">Network</option>
-        <option value="AI">AI</option>
-        <option value="Web">Web</option>
-        <option value="Mobile">Mobile</option>
-        <option value="Devops">DevOps</option>
-        <option value="Other">Other</option>
-      </select>
+
+    <div class="form-group">
+      <label class="form-label">Mission</label>
+      <textarea class="form-textarea" formControlName="mission" title="Mission" placeholder="Enter mission details" rows="3"></textarea>
     </div>
-    <div class="mb-3">
-      <label for="type" class="form-label">Type</label>
-      <select class="form-select" id="type" formControlName="type">
-        <option value="Onsite">Onsite</option>
-        <option value="Remote">Remote</option>
-        <option value="Hybrid">Hybrid</option>
-      </select>
+
+    <div class="form-group">
+      <label class="form-label">Working Conditions</label>
+      <textarea class="form-textarea" formControlName="workingConditions" title="Working Conditions" placeholder="Enter working conditions" rows="3"></textarea>
     </div>
-    <div class="mb-3">
-      <label for="workType" class="form-label">Work Type</label>
-      <select class="form-select" id="workType" formControlName="workType">
-        <option value="FullTime">Full-Time</option>
-        <option value="PartTime">Part-Time</option>
-      </select>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Domain</label>
+        <select class="form-select" formControlName="domaine" title="Domain">
+          <option *ngFor="let domain of domains" [value]="domain.value">{{ domain.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Job Type</label>
+        <select class="form-select" formControlName="type" title="Job Type">
+          <option *ngFor="let type of jobTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Work Type</label>
+        <select class="form-select" formControlName="workType" title="Work Type">
+          <option *ngFor="let work of workTypes" [value]="work.value">{{ work.label }}</option>
+        </select>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="profile" class="form-label">Profile</label>
-      <textarea class="form-control" id="profile" rows="3" formControlName="profile"></textarea>
-    </div>
-    <div class="mb-3">
-      <label for="keySkills" class="form-label">Key Skills</label>
-      <textarea class="form-control" id="keySkills" rows="3" formControlName="keySkills"></textarea>
-    </div>
-    <div class="mb-3">
-      <label for="mission" class="form-label">Mission</label>
-      <textarea class="form-control" id="mission" rows="3" formControlName="mission"></textarea>
-    </div>
-    <div class="mb-3">
-      <label for="workingConditions" class="form-label">Working Conditions</label>
-      <textarea class="form-control" id="workingConditions" rows="3" formControlName="workingConditions"></textarea>
-    </div>
-    <div class="d-flex justify-content-between">
-      <button type="button" class="btn btn-secondary" routerLink="/job">Cancel</button>
-      <button type="submit" class="btn btn-primary">Add Job</button>
+
+    <div class="form-actions">
+      <button type="submit" class="submit-button" [disabled]="jobForm.invalid">Post Job</button>
     </div>
   </form>
 </div>
- -->
- <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
-
-  <div>
-    <label>Title</label>
-    <input formControlName="title" type="text" />
-  </div>
-
-  <div>
-    <label>Description</label>
-    <textarea formControlName="description"></textarea>
-  </div>
-
-  <div>
-    <label>Location</label>
-    <input formControlName="location" type="text" />
-  </div>
-
-  <div>
-    <label>Posted Date</label>
-    <input formControlName="postedDate" type="date" />
-  </div>
-
-  <div>
-    <label>Experience Level</label>
-    <select formControlName="experience">
-      <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Contract Type</label>
-    <select formControlName="contractType">
-      <option *ngFor="let contract of contractTypes" [value]="contract.value">{{ contract.label }}</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Profile</label>
-    <input formControlName="profile" type="text" />
-  </div>
-
-  <div>
-    <label>Key Skills</label>
-    <input formControlName="keySkills" type="text" />
-  </div>
-
-  <div>
-    <label>Mission</label>
-    <textarea formControlName="mission"></textarea>
-  </div>
-
-  <div>
-    <label>Working Conditions</label>
-    <textarea formControlName="workingConditions"></textarea>
-  </div>
-
-  <div>
-    <label>Domain</label>
-    <select formControlName="domaine">
-      <option *ngFor="let domain of domains" [value]="domain.value">{{ domain.label }}</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Job Type</label>
-    <select formControlName="type">
-      <option *ngFor="let type of jobTypes" [value]="type.value">{{ type.label }}</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Work Type</label>
-    <select formControlName="workType">
-      <option *ngFor="let work of workTypes" [value]="work.value">{{ work.label }}</option>
-    </select>
-  </div>
-
-  <button type="submit" [disabled]="jobForm.invalid">Submit</button>
-
-</form>

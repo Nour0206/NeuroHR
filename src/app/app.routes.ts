@@ -73,8 +73,15 @@ export const routes: Routes = [
         path: 'chatbot',
         loadChildren: () => import('./views/chatbot/routes').then((m) => m.routes)
       }
-      
+
     ]
+  },
+  {
+    path: 'app',
+    loadComponent: () => import('./views/job-applications/job-applications.component').then(m => m.ApplicationListComponent),
+    data: {
+      title: 'app'
+    }
   },
   {
     path: '404',
