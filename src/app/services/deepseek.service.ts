@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
+import * as dotenv from 'dotenv';
 import { JobService } from './job.service'; // Import JobService
+
+dotenv.config({ path: 'ats/.env' });
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeepseekService {
-  private groqApiKey = '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';
+  private groqApiKey: string;
 
-  constructor(private jobService: JobService) {} // Inject JobService
+  constructor(private jobService: JobService) {
+    this.groqApiKey = process.env.GROQ_API_KEY || '';
+  } // Inject JobService
 
   async askBot(message: string): Promise<string> {
     const endpoint = 'https://api.groq.com/openai/v1/chat/completions'; // Updated Groq API endpoint
