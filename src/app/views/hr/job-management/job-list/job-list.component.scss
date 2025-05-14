@@ -15,7 +15,7 @@ a[href="#"]:hover {
 .btn-primary {
   font-weight: 500;
 }
-/* Dark semi-transparent overlay background */
+/* Application Overlay - Background */
 .application-overlay {
   position: fixed;
   top: 0;
@@ -29,18 +29,222 @@ a[href="#"]:hover {
   z-index: 1050; /* High z-index to appear above other content */
 }
 
-/* The actual card */
+/* Application Card */
 .application-card {
   background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  width: 90%;
-  max-width: 500px;
-  animation: fadeIn 0.3s ease-out;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(0);
+  animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+.application-card h5 {
+  color: #2d3748;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
 }
+
+/* File Upload Styling */
+.form-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  background-color: white;
+}
+
+/* Custom File Input Styling */
+input[type="file"] {
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+  padding: 0.5rem 1rem;
+  background: #edf2f7;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-right: 1rem;
+  transition: all 0.2s ease;
+  color: #4a5568;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #e2e8f0;
+}
+
+/* Buttons Container */
+.d-flex.gap-2 {
+  margin-top: 1.5rem;
+}
+
+/* Button Styling */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-outline-secondary {
+  background: white;
+  border: 1px solid #e2e8f0 !important;
+  color: #4a5568;
+}
+
+.btn-outline-secondary:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0 !important;
+}
+
+.btn-success {
+  background: #38a169;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #2f855a;
+  transform: translateY(-1px);
+}
+
+.btn-success:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 500px) {
+  .application-card {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .d-flex.gap-2 {
+    flex-direction: column;
+    gap: 0.75rem !important;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+/* Base Link Styling */
+.text-decoration-none {
+  display: inline-block;
+  position: relative;
+  color: #3b82f6; /* Nice blue color - change to your brand color */
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.25rem 0.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none !important; /* Ensures no underline */
+}
+
+/* Hover Effect - Animated Underline */
+.text-decoration-none:hover {
+  color: #2563eb; /* Darker shade on hover */
+}
+
+.text-decoration-none::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #2563eb;
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.text-decoration-none:hover::after {
+  width: 100%;
+}
+
+/* Optional: Add an arrow icon */
+.text-decoration-none::before {
+  content: '→';
+  margin-right: 0.25rem;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.text-decoration-none:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Focus state for accessibility */
+.text-decoration-none:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+}
+
+/* Active state */
+.text-decoration-none:active {
+  color: #1d4ed8;
+  transform: translateY(1px);
+}
+
+/* Alternative Design (Uncomment to use) */
+/*
+.text-decoration-none {
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  color: white !important;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(59, 130, 246, 0.2);
+}
+
+.text-decoration-none:hover {
+  background: linear-gradient(90deg, #2563eb, #4f46e5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+*/

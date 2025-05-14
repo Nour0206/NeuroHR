@@ -4,7 +4,6 @@ export interface Job {
   description: string;
   location: string;
   postedDate?: Date;
- 
   profile: string;
   keySkills: string;
   mission: string;

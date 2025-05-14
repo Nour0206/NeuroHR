@@ -1,62 +1,62 @@
-<form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+<form class="job-form" [formGroup]="jobForm" (ngSubmit)="onSubmit()">
 
   <div>
     <label>Title</label>
-    <input formControlName="title" type="text" />
+    <input formControlName="title" type="text" placeholder="Enter job title" />
   </div>
 
   <div>
     <label>Description</label>
-    <textarea formControlName="description"></textarea>
+    <textarea formControlName="description" title="Job Description" placeholder="Enter job description"></textarea>
   </div>
 
   <div>
     <label>Location</label>
-    <input formControlName="location" type="text" />
+    <input formControlName="location" type="text" title="Job Location" placeholder="Enter job location" />
   </div>
 
   <div>
     <label>Posted Date</label>
-    <input formControlName="postedDate" type="date" />
+    <input formControlName="postedDate" type="date" title="Posted Date" placeholder="Select posted date" />
   </div>
 
   <div>
     <label>Experience Level</label>
-    <select formControlName="experience">
+    <select formControlName="experience" title="Experience Level">
       <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
     </select>
   </div>
 
   <div>
     <label>Contract Type</label>
-    <select formControlName="contractType">
+    <select formControlName="contractType" title="Contract Type">
       <option *ngFor="let contract of contractTypes" [value]="contract.value">{{ contract.label }}</option>
     </select>
   </div>
 
   <div>
     <label>Profile</label>
-    <input formControlName="profile" type="text" />
+    <input formControlName="profile" type="text" title="Profile" placeholder="Enter profile" />
   </div>
 
   <div>
     <label>Key Skills</label>
-    <input formControlName="keySkills" type="text" />
+    <input formControlName="keySkills" type="text" title="Key Skills" placeholder="Enter key skills" />
   </div>
 
   <div>
     <label>Mission</label>
-    <textarea formControlName="mission"></textarea>
+    <textarea formControlName="mission" title="Mission" placeholder="Enter mission details"></textarea>
   </div>
 
   <div>
     <label>Working Conditions</label>
-    <textarea formControlName="workingConditions"></textarea>
+    <textarea formControlName="workingConditions" title="Working Conditions" placeholder="Enter working conditions"></textarea>
   </div>
 
   <div>
     <label>Domain</label>
-    <select formControlName="domaine">
+    <select formControlName="domaine" title="Domain">
       <option *ngFor="let domain of domains" [value]="domain.value">{{ domain.label }}</option>
     </select>
   </div>
@@ -74,10 +74,8 @@
           <option *ngFor="let work of workTypes" [value]="work.value">{{ work.label }}</option>
         </select>
       </div>
-    </div>
 
     <div class="form-actions">
       <button type="submit" class="submit-button" [disabled]="jobForm.invalid">Post Job</button>
     </div>
   </form>
-</div>

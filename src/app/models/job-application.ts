@@ -2,12 +2,15 @@ export type ApplicationStatus = 'Pending' | 'Reviewed' | 'Interviewing' | 'Offer
 
 export interface JobApplication {
   id?: number;
-  userId?: string;
+  userId?: string; // Replace createdBy with userId to match the backend structure
   jobPostingId?: number;
   appliedOn?: Date;
-  status?: ApplicationStatus; 
+  status?: ApplicationStatus;
   jdMatchPercentage?: number;
   missingKeywords?: string;
   matchingKeywords?: string;
   profileSummary?: string;
+  // Optional property to store the fetched username
+  userName?: string;
 }
+

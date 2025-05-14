@@ -1,113 +1,154 @@
-/* Form container styling */
-.form-container {
-  max-width: 900px;
+/* General Form Styling */
+.job-form {
+  max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.form-title {
-  color: #2c3e50;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 1.8rem;
+/* Form Elements Container */
+.job-form div {
+  margin-bottom: 1.5rem;
 }
 
-/* Form layout */
-.job-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-row {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.form-row .form-group {
-  flex: 1;
-}
-
-/* Form elements styling */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-label {
+/* Labels */
+.job-form label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #34495e;
-  font-size: 0.9rem;
+  color: #2d3748;
+  font-size: 0.95rem;
 }
 
-.form-input, .form-select, .form-textarea {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+/* Input Fields and Textareas */
+.job-form input[type="text"],
+.job-form input[type="date"],
+.job-form textarea,
+.job-form select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+  color: #4a5568;
 }
 
-.form-input:focus, .form-select:focus, .form-textarea:focus {
+.job-form input[type="text"]:focus,
+.job-form input[type="date"]:focus,
+.job-form textarea:focus,
+.job-form select:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  background-color: #ffffff;
 }
 
-.form-textarea {
-  min-height: 100px;
+/* Textareas */
+.job-form textarea {
+  min-height: 120px;
   resize: vertical;
 }
 
-.form-select {
+/* Select Dropdowns */
+.job-form select {
   appearance: none;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
+  background-position: right 1rem center;
+  background-size: 1em;
 }
 
-/* Button styling */
+/* Submit Button */
 .form-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
+  text-align: center;
+  margin-top: 2rem;
 }
 
 .submit-button {
-  background-color: #3498db;
+  background-color: #4f46e5;
   color: white;
   border: none;
   padding: 0.75rem 2rem;
-  border-radius: 4px;
   font-size: 1rem;
   font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(79, 70, 229, 0.1);
 }
 
-.submit-button:hover:not(:disabled) {
-  background-color: #2980b9;
+.submit-button:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px rgba(79, 70, 229, 0.15);
 }
 
 .submit-button:disabled {
-  background-color: #bdc3c7;
+  background-color: #cbd5e0;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
 
-  .form-container {
+/* Responsive Design */
+@media (max-width: 768px) {
+  .job-form {
     padding: 1.5rem;
     margin: 1rem;
   }
 }
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f8fafc;
+  color: #4a5568;
+}
+
+/* Optional: Add some animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.job-form div {
+  animation: fadeIn 0.3s ease forwards;
+  opacity: 0;
+}
+
+.job-form div:nth-child(1) { animation-delay: 0.1s; }
+.job-form div:nth-child(2) { animation-delay: 0.2s; }
+.job-form div:nth-child(3) { animation-delay: 0.3s; }
+.job-form div:nth-child(4) { animation-delay: 0.4s; }
+.job-form div:nth-child(5) { animation-delay: 0.5s; }
+.job-form div:nth-child(6) { animation-delay: 0.6s; }
+.job-form div:nth-child(7) { animation-delay: 0.7s; }
+.job-form div:nth-child(8) { animation-delay: 0.8s; }
+.job-form div:nth-child(9) { animation-delay: 0.9s; }
+.job-form div:nth-child(10) { animation-delay: 1.0s; }
+.job-form div:nth-child(11) { animation-delay: 1.1s; }
+.job-form div:nth-child(12) { animation-delay: 1.2s; }

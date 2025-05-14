@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
-import { IconDirective } from '@coreui/icons-angular';
 import {
   ContainerComponent,
   ShadowOnScrollDirective,
@@ -14,9 +13,10 @@ import {
   SidebarToggleDirective,
   SidebarTogglerDirective
 } from '@coreui/angular';
+import { IconDirective } from '@coreui/icons-angular';
 
+import { NavItemsService } from '../../services/nav-items.service';
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
-import { navItems } from './_nav';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -48,5 +48,15 @@ function isOverflown(element: HTMLElement) {
   ]
 })
 export class DefaultLayoutComponent {
-  public navItems = [...navItems];
+  constructor(private navItemsService: NavItemsService) {}
+
+  public get navItems() {
+    return this.navItemsService.getNavItems();
+  }
+
+  public get visibleNavItems() {
+    const filteredNavItems = this.navItemsService.getNavItems().filter(item => !(item.attributes?.['hidden']));
+    console.log('Filtered visibleNavItems:', filteredNavItems); // Debugging log
+    return filteredNavItems;
+  }
 }

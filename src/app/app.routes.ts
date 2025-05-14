@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
-    
+
 
     data: {
       title: 'Home'
@@ -31,7 +31,7 @@ export const routes: Routes = [
         path: 'job',
         loadChildren: () => import('./views/hr/job-management/job-management.routes').then((m) => m.jobManagementRoutes),
         canActivate: [AuthGuard]
-      }, 
+      },
       {
         path: 'candidate',
         loadChildren: () => import('./views/candidate/candidate.routes').then((m) => m.CANDIDATE_ROUTES),
@@ -64,7 +64,18 @@ export const routes: Routes = [
       {
         path: 'chatbot',
         loadChildren: () => import('./views/chatbot/routes').then((m) => m.routes)
-      }
+      },
+      {
+        path:'candidates',
+        loadComponent: () => import('./views/hr/job-management/job-candidates/job-candidates.component').then((m) => m.JobCandidatesComponent)
+      },
+      {
+    path: 'user-job-applications',
+    loadComponent: () => import('../app/views/job-applications/user-job/user-job-applications.component').then(m => m.UserJobApplicationsComponent),
+    data: {
+      title: 'User Job Applications'
+    }
+  },
 
     ]
   },
@@ -101,6 +112,13 @@ export const routes: Routes = [
     loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
     data: {
       title: 'Register Page'
+    }
+  },
+  {
+    path: 'user-job-applications',
+    loadComponent: () => import('../app/views/job-applications/user-job/user-job-applications.component').then(m => m.UserJobApplicationsComponent),
+    data: {
+      title: 'User Job Applications'
     }
   },
   { path: '**', redirectTo: 'dashboard' }

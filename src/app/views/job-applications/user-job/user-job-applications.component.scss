@@ -1,0 +1,162 @@
+/* Main container styling */
+:host {
+  display: block;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Loading indicator */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #4a6fa5;
+}
+
+.loading-indicator::after {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border: 3px solid rgba(74, 111, 165, 0.3);
+  border-radius: 50%;
+  border-top-color: #4a6fa5;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error message */
+.error-message {
+  padding: 1rem;
+  background-color: #ffebee;
+  color: #c62828;
+  border-left: 4px solid #c62828;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+/* Heading */
+h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #4a6fa5, #6a8fc7);
+}
+
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table thead {
+  background: linear-gradient(to right, #4a6fa5, #6a8fc7);
+  color: white;
+}
+
+.table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table td {
+  padding: 1rem;
+  color: #555;
+}
+
+/* Status badges */
+.table td:nth-child(2) {
+  font-weight: 500;
+}
+
+.table td:nth-child(2):before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.table td:nth-child(2)[data-status="Pending"]:before {
+  background-color: #ff9800;
+}
+
+.table td:nth-child(2)[data-status="Approved"]:before {
+  background-color: #4caf50;
+}
+
+.table td:nth-child(2)[data-status="Rejected"]:before {
+  background-color: #f44336;
+}
+
+/* Resume link styling */
+.table a {
+  color: #4a6fa5;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.table a:hover {
+  color: #3a5a80;
+  background-color: rgba(74, 111, 165, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+}

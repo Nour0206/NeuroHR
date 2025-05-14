@@ -1,8 +1,7 @@
-
 <div class="container">
     <h2>User List</h2>
 
-  <button class="btn btn-primary mb-3" (click)="openAddUserModal()">
+  <button *ngIf="userIsAdmin" class="btn btn-primary mb-3" (click)="openAddUserModal()">
     Add User
   </button>
 
@@ -18,16 +17,16 @@
     </thead>
     <tbody>
       <tr *ngFor="let utilisateur of utilisateurs">
-       
+
         <td>{{ utilisateur.name }}</td>
         <td>{{ utilisateur.email }}</td>
         <td>{{ utilisateur.username }}</td>
         <td>{{ utilisateur.role }}</td>
         <td>
-          <button class="btn btn-sm btn-warning me-2" (click)="openEditUserModal(utilisateur)">
+          <button *ngIf="userIsAdmin" class="btn btn-sm btn-warning me-2" (click)="openEditUserModal(utilisateur)">
             Edit
           </button>
-          <button class="btn btn-sm btn-danger" (click)="deleteUser(utilisateur.id)">
+          <button *ngIf="userIsAdmin" class="btn btn-sm btn-danger" (click)="deleteUser(utilisateur.id)">
             Delete
           </button>
         </td>
@@ -40,34 +39,34 @@
 </div>
 
 <!-- User Form Modal -->
-<div class="modal" [class.show]="showModal" style="display: block" *ngIf="showModal">
+<div class="modal" [ngClass]="{'show': showModal}" *ngIf="showModal">
   <div class="modal-dialog  modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{{ isEditMode ? 'Edit User' : 'Add User' }}</h5>
-        <button type="button" class="btn-close" (click)="closeModal()"></button>
+        <button type="button" class="btn-close" (click)="closeModal()" title="Close"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label class="form-label">Name</label>
-            <input type="text" class="form-control" formControlName="name">
+            <input type="text" class="form-control" formControlName="name" placeholder="Enter your name">
           </div>
           <div class="mb-3">
             <label class="form-label">Email</label>
-            <input type="email" class="form-control" formControlName="email">
+            <input type="email" class="form-control" formControlName="email" title="Enter your email" placeholder="Enter your email">
           </div>
           <div class="mb-3">
             <label class="form-label">Username</label>
-            <input type="text" class="form-control" formControlName="username">
+            <input type="text" class="form-control" formControlName="username" title="Enter your username" placeholder="Enter your username">
           </div>
           <div class="mb-3">
             <label class="form-label">Password</label>
-            <input type="password" class="form-control" formControlName="password">
+            <input type="password" class="form-control" formControlName="password" title="Enter your password" placeholder="Enter your password">
           </div>
           <div class="mb-3">
             <label class="form-label">Role</label>
-            <select class="form-select" formControlName="role">
+            <select class="form-select" formControlName="role" title="Select a role">
               <option value="Admin">Admin</option>
               <option value="HR">HR</option>
               <option value="CANDIDATE">Candidate</option>

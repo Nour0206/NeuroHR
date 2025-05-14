@@ -1,0 +1,48 @@
+<div *ngIf="isLoading" class="loading-indicator">Loading...</div>
+<div *ngIf="error" class="error-message">{{ error }}</div>
+<div *ngIf="!isLoading && !error">
+  <h2>Candidates for Job ID: {{ jobId }}</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Candidate Name</th>
+        <th>JD Match Percentage</th>
+        <th>Profile Summary</th>
+        <th>Missing Keywords</th>
+        <th>Matching Keywords</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let candidate of candidates">
+        <td>{{ candidate.userName }}</td>
+        <td [attr.data-percentage]="candidate.jdMatchPercentage">{{ candidate.jdMatchPercentage }}%</td>
+        <td><p (click)="openProfileModal(candidate.profileSummary ?? '')">{{ candidate.profileSummary ?? '' | truncate:10 }} View Full Summary</p></td>
+        <td>{{ candidate.missingKeywords }}</td>
+        <td>{{ candidate.matchingKeywords }}</td>
+        <td>
+          <select [(ngModel)]="candidate.status" (change)="candidate.id ? updateStatus(candidate.id, candidate.status || 'Pending') : null" title="Candidate Status">
+            <option value="Pending">Pending</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Interviewing">Interviewing</option>
+            <option value="Offered">Offered</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Profile Summary Modal -->
+<div class="profile-modal" [class.active]="showProfileModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 class="modal-title">Profile Summary</h3>
+      <button class="close-btn" (click)="closeProfileModal()">&times;</button>
+    </div>
+    <div class="modal-content">
+      {{ selectedProfileSummary }}
+    </div>
+  </div>
+</div>

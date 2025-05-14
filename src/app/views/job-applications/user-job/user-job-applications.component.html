@@ -1,0 +1,23 @@
+<div *ngIf="isLoading" class="loading-indicator">Loading...</div>
+<div *ngIf="error" class="error-message">{{ error }}</div>
+<div *ngIf="!isLoading && !error">
+  <h2>Your Job Applications</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Job Posting ID</th>
+        <th>Status</th>
+        <th>Applied On</th>
+        <th>Job Matching Percentage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let app of userApplications">
+        <td>{{ app.jobPostingId }}</td>
+        <td [attr.data-status]="app.status">{{ app.status }}</td>
+        <td>{{ app.appliedOn | date }}</td>
+        <td>{{ app.jdMatchPercentage }}%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

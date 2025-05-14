@@ -1,8 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { JobService } from '../../../../services/job.service';
+import { CommonModule } from '@angular/common';
+import { Job } from '../../../../models/job';
+
+// Define enum-like types for better type safety
+type ExperienceLevel = 'NoExperience' | 'OneToThreeYears' | 'ThreeToFiveYears';
+type ContractType = 'Permanent' | 'Temporary' | 'Internship';
+type WorkType = 'FullTime' | 'PartTime';
+type JobType = 'Onsite' | 'Remote' | 'Hybrid';
+type Domain = 'Security' | 'Data' | 'Cloud' | 'Network' | 'AI' | 'Web' | 'Mobile' | 'DevOps' | 'Other';
 
 @Component({
   selector: 'app-job-details',
-  imports: [],
   templateUrl: './job-details.component.html',
   styleUrls: ['./job-details.component.scss'],
   standalone: true,
@@ -62,7 +72,7 @@ export class JobDetailsComponent implements OnInit {
       return;
     }
 
-    this.jobService.getJobById(+jobId).subscribe({
+    this.jobService.getJobById(jobId).subscribe({
       next: (job) => {
         this.job = job;
         this.isLoading = false;

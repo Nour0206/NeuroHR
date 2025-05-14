@@ -28,6 +28,7 @@ import {
   cilBell,
   cilBold,
   cilBookmark,
+  cilBriefcase,
   cilCalculator,
   cilCalendar,
   cilChart,
@@ -96,8 +97,8 @@ import {
   cilUserUnfollow
 } from '@coreui/icons';
 
-import { signet } from './signet';
 import { logo } from './logo';
+import { signet } from './signet';
 
 export const iconSubset = {
   cibCcAmex,
@@ -129,6 +130,7 @@ export const iconSubset = {
   cilBell,
   cilBold,
   cilBookmark,
+  cilBriefcase,
   cilCalculator,
   cilCalendar,
   cilChart,
@@ -229,6 +231,7 @@ export enum IconSubset {
   cilBell = 'cilBell',
   cilBold = 'cilBold',
   cilBookmark = 'cilBookmark',
+  cilBriefcase = 'cilBriefcase',
   cilCalculator = 'cilCalculator',
   cilCalendar = 'cilCalendar',
   cilChart = 'cilChart',

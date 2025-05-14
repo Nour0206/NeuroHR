@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Job } from '../models/job';
@@ -11,22 +11,25 @@ export class JobService {
 
   constructor(private http: HttpClient) {}
 
- 
+  getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
 
-    getJobs(selectedDomaine: string, selectedContractType: string): Observable<Job[]> {
-      let params = new HttpParams();
-  
-      if (selectedDomaine) {
-        params = params.set('domaine', selectedDomaine);
-      }
-      if (selectedContractType) {
-        params = params.set('contractType', selectedContractType);
-      }
-  
-      return this.http.get<Job[]>(this.apiUrl, { params });
+  getJobs(selectedDomaine: string, selectedContractType: string): Observable<Job[]> {
+    let params = new HttpParams();
+
+    if (selectedDomaine) {
+      params = params.set('domaine', selectedDomaine);
+    }
+    if (selectedContractType) {
+      params = params.set('contractType', selectedContractType);
     }
 
-
+    return this.http.get<Job[]>(this.apiUrl, { params });
+  }
 
   getJobById(id: string): Observable<Job> {
     return this.http.get<Job>(`${this.apiUrl}/${id}`);
@@ -43,7 +46,4 @@ export class JobService {
   deleteJob(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
-
-  
 }

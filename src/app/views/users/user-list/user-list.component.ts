@@ -1,11 +1,11 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
-import { User } from '../../../models/user.model';
 import { CommonModule } from '@angular/common';
+import { User } from '../../../models/user.model';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -31,27 +31,37 @@ export class UserListComponent  implements OnInit {
   showModal = false;
   isEditMode = false;
   currentUserId: string | null = null;
+  userIsHR: boolean = false; // Add a property to check if the user is HR
+  userIsAdmin: boolean = false; // Add a property to check if the user is Admin
 
-  userForm: FormGroup = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    username: ['', Validators.required],
-    password: ['', Validators.required],
-    role: ['candidate', Validators.required]
-  });
+  userForm!: FormGroup;
 
-  constructor(private userService: UserService,private fb: FormBuilder
+  constructor(private authService: AuthService,private userService: UserService,private fb: FormBuilder
 ) {}
 
   ngOnInit(): void {
+    this.userForm = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      role: ['candidate', Validators.required]
+    });
     this.loadUsers();
+
+    // Set userIsHR based on the user's role
+    const userInfo = this.authService.getUserInfo();
+    this.userIsHR = userInfo.roles?.includes('HR') || false;
+
+    // Set userIsAdmin based on the user's role
+    this.userIsAdmin = userInfo.roles?.includes('Admin') || false;
+    console.log('User Info:', userInfo); // Debugging log
+    console.log('User Roles:', userInfo['roles']); // Debugging log  
   }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe({
-      next: (users) => {this.utilisateurs = users
-        console.log(users);
-      },
+      next: (users) => this.utilisateurs = users,
       error: (err) => console.error('Error loading users:', err)
     });
   }
@@ -59,7 +69,7 @@ export class UserListComponent  implements OnInit {
   openAddUserModal(): void {
     this.isEditMode = false;
     this.currentUserId = null;
-    this.userForm.reset({ role: 'USER' });
+    this.userForm.reset({ role: 'candidate' });
     this.showModal = true;
   }
 
@@ -106,7 +116,4 @@ export class UserListComponent  implements OnInit {
       });
     }
   }
- setRoleFilter(role: string): void {
-  this.roleFilter = role;
-}
 }

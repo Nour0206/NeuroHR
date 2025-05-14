@@ -1,5 +1,5 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 
@@ -20,18 +20,28 @@ import {
   HeaderTogglerDirective,
   NavItemComponent,
   NavLinkDirective,
-  SidebarToggleDirective
+  SidebarToggleDirective,
 } from '@coreui/angular';
 import { AuthService } from '../../../services/auth.service';
+import { NavItemsService } from '../../../services/nav-items.service';
+import { navItems } from '../_nav'; // Import navItems
 
 
 
 @Component({
     selector: 'app-default-header',
     templateUrl: './default-header.component.html',
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective]
+    styleUrls: ['./default-header.component.scss'],
+    imports: [ContainerComponent,CommonModule, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective]
 })
-export class DefaultHeaderComponent extends HeaderComponent {
+export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
+  username: string = '';
+  userIsAdmin: boolean = false; // Add a property to check if the user is Admin
+  navItems = [...navItems]; // Use a spread operator to create a local copy of navItems
+
+  constructor(private authService: AuthService, private router: Router, private navItemsService: NavItemsService) {
+    super();
+  }
 
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
@@ -47,58 +57,47 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
   });
 
- /*  constructor(private authService: AuthService, private router: Router) {
-    super();
-  }
-  
-  username: string = '';
-  
   ngOnInit(): void {
-    const userInfo = this.authService.getUserInfo();
-    if (userInfo && userInfo.username) {
-      this.username = userInfo.username;
+    this.updateUserInfo(); // Fetch user info when the component is initialized
+    const userInfo = this.authService.getUserInfo(); // Use AuthService to get user info
+    console.log('Extracted User Info:', userInfo); // Debugging log
+    const roles = userInfo?.roles || [];
+    console.log('Extracted Roles:', roles); // Debugging log
+    this.userIsAdmin = roles.includes('Admin');
+
+    let updatedNavItems = this.navItemsService.getNavItems();
+
+    if (this.userIsAdmin) {
+      // Add the "Users" item if it doesn't already exist
+      if (!updatedNavItems.some(item => item.name === 'Users')) {
+        updatedNavItems.push({
+          name: 'Users',
+          url: '/users',
+          iconComponent: { name: 'cil-user' }
+        });
+      }
+    } else {
+      // Remove the "Users" item if it exists
+      updatedNavItems = updatedNavItems.filter(item => item.name !== 'Users');
     }
-  }
-  
-  logout(): void {
-    this.authService.logout(); // Call the logout method from AuthService
-    this.router.navigate(['/login']); // Redirect to the login page after logout
-  }
-   */
 
-
-  username: string = '';
-  
-  constructor(private authService: AuthService, private router: Router) {
-    super();
+    this.navItemsService.updateNavItems(updatedNavItems);
+    console.log('Final navItems state:', updatedNavItems);
   }
-  
-  /* ngOnInit(): void {
-    this.updateUserInfo();
-    // Écouter les changements d'état d'authentification si nécessaire
-  }
-   */
 
-
-  ngOnInit(): void {
-    const userInfo = this.authService.getUserInfo();
-    if (userInfo) {
-      this.username = userInfo.username;
-    }
-  }
+  // Update user info
   private updateUserInfo(): void {
     const userInfo = this.authService.getUserInfo();
-    this.username = userInfo?.username || '';
+    this.username = userInfo?.username || ''; // Set username from AuthService
   }
-  
+
   logout(): void {
-    this.authService.logout();
-    this.username = ''; // Réinitialiser le nom d'utilisateur
-    this.router.navigate(['/login']);
+    this.authService.logout(); // Call AuthService logout
+    this.username = ''; // Reset the username on logout
+    this.router.navigate(['/login']); // Redirect to login page
   }
 
-
-  sidebarId = input('sidebar1');
+  sidebarId = 'sidebar1'; // Fixed initialization of sidebarId
 
   public newMessages = [
     {

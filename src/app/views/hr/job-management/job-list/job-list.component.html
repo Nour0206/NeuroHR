@@ -18,7 +18,7 @@
 
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <button class="btn btn-primary" routerLink="add">Add Job</button>
+    <button *ngIf="userIsHR" class="btn btn-primary" routerLink="add">Add Job</button>
   </div>
 
   <div *ngIf="jobs.length === 0" class="alert alert-info">
@@ -52,13 +52,27 @@
       </div>
 
       <div class="d-flex justify-content-between border-top pt-3">
-        <a class="text-decoration-none" [routerLink]="['/job/details', job.id]">Voir plus</a>
-        <button class="btn btn-primary btn-sm px-3">Postuler</button>
-      </div>
-     <!--  <button class="btn btn-warning btn-sm" (click)="onEdit(job.id)">Modifier</button> -->
-
+        <a class="text-decoration-none" [routerLink]="['/job/details', job.id]">See More</a>
+        <button *ngIf="isHR()" class="btn btn-primary btn-sm px-3" [routerLink]="['/job', job.id, 'candidates']">
+          See Candidates
+        </button>
+        <button *ngIf="!isHR()" class="btn btn-primary btn-sm px-3" [disabled]="isJobApplied(job.id)" (click)="toggleCard(job.id)">
+          {{ isJobApplied(job.id) ? 'Already Applied' : 'Postuler' }}
+        </button>
+        <div *ngIf="showCard[job.id]" class="application-overlay">
+          <div class="application-card">
+            <h5>Apply for Position</h5>
+            <label for="resumeUpload" class="form-label">Upload Resume</label>
+            <input id="resumeUpload" type="file" (change)="onFileChange($event)" accept=".pdf"
+                   class="form-control mb-3" title="Upload your resume in PDF format" />
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary flex-grow-1" (click)="toggleCard(job.id)">Cancel</button>
+              <button class="btn btn-success flex-grow-1" (click)="apply(job.id)">Submit</button>
+            </div>
+          </div>
+        </div>
     <!-- Bouton Supprimer -->
-    <button class="btn btn-danger btn-sm" (click)="onDelete(job.id)">Supprimer</button>
+    <button *ngIf="userIsHR" class="btn btn-danger btn-sm" (click)="onDelete(job.id)">Remove</button>
 
     </div>
   </div>

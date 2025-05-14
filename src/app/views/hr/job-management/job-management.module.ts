@@ -10,14 +10,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    
+
   ],
   imports: [
-    JobListComponent, 
+    JobListComponent,
     JobAddComponent,
     JobUpdateComponent,
     JobDetailsComponent,
-    CommonModule,
     CommonModule,
     ReactiveFormsModule,
     RouterModule,

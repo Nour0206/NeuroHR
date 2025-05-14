@@ -31,6 +31,8 @@ export class JobApplicationService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
   uploadResume(formData: FormData): Observable<any> {
-    return this.http.post<any>('http://localhost:8501/upload', formData); }
+    return this.http.post<any>('http://localhost:8501/upload', formData);
+  }
 }
