@@ -96,7 +96,6 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
     this.username = ''; // Reset the username on logout
     this.router.navigate(['/login']); // Redirect to login page
   }
-
   sidebarId = 'sidebar1'; // Fixed initialization of sidebarId
 
   public newMessages = [

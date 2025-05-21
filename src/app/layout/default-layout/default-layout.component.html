@@ -7,11 +7,20 @@
   visible
 >
   <c-sidebar-header class="border-bottom">
-    <c-sidebar-brand [routerLink]="[]">
-      <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="CoreUI Logo"></svg>
-      <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg>
-    </c-sidebar-brand>
-  </c-sidebar-header>
+  <c-sidebar-brand [routerLink]="[]">
+    <!-- Full Logo (visible when sidebar is expanded) -->
+    <img src="assets/images/neuroh.png"
+         class="sidebar-brand-full"
+         alt="Your Company Logo"
+         height="50">
+
+    <!-- Narrow Logo (visible when sidebar is collapsed) -->
+    <img src="assets/images/neu.png"
+         class="sidebar-brand-narrow"
+         alt="Your Company Icon"
+         height="50">
+  </c-sidebar-brand>
+</c-sidebar-header>
 
   <ng-scrollbar pointerEventsMethod="scrollbar" visibility="hover">
     <c-sidebar-nav [navItems]="visibleNavItems" dropdownMode="close" compact />

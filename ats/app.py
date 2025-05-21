@@ -4,9 +4,9 @@ import PyPDF2 as pdf
 import re
 import json
 from flask_cors import CORS
-import requests
 from dotenv import load_dotenv
 from groq import Groq
+import ast
 
 app = Flask(__name__)
 CORS(app)
@@ -14,11 +14,9 @@ load_dotenv()
 
 # Groq API configuration
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+groq_client = Groq(api_key=GROQ_API_KEY)
 
-# Initialize Groq client
-groq_client = Groq(
-    api_key=GROQ_API_KEY,
-)
+# -------- PROMPTS --------
 
 input_prompt = """
 Hey Act Like a skilled or very experienced ATS (Application Tracking System)
@@ -31,18 +29,83 @@ resume: {text}
 description: {jd}
 
 I want the response in one single string having the structure:
-{{"JD Match":"%","MissingKeywords":[],'MatchingKeywords':[],"Profile Summary":""}}
+{{"JD Match":"%","MissingKeywords":[],"MatchingKeywords":[],"Profile Summary":""}}
 """
 
-# Extract text from PDF
+profile_extraction_prompt = """
+You are an expert resume parser. Extract the following information from the provided resume and return it as a valid JSON object with these fields (in English):
+
+{{
+  "ProfessionalExperiences": [
+    {{
+      "JobTitle": "",
+      "Company": "",
+      "StartDate": "",
+      "EndDate": "",
+      "Description": ""
+    }}
+  ],
+  "Education": [
+    {{
+      "Degree": "",
+      "Institution": "",
+      "Year": ""
+    }}
+  ],
+  "Projects": [
+    {{
+      "Title": "",
+      "Description": "",
+      "Technologies": []
+    }}
+  ],
+  "Languages": [""],
+  "Certifications": [
+    {{
+      "Name": "",
+      "Institution": "",
+      "Year": ""
+    }}
+  ],
+  "ProfileSummary": ""
+}}
+
+- Only return a single valid JSON object, no markdown, no explanation, no extra text.
+- All fields must be present, even if empty.
+- Use double quotes for all keys and string values.
+- Do not include any comments or extra formatting.
+- If a field is not found, return an empty string or empty array for that field.
+
+Resume:
+{text}
+
+Return ONLY the JSON object as shown above, with all fields filled if possible.
+"""
+
+# -------- UTILITIES --------
+
 def extract_text(file):
     reader = pdf.PdfReader(file)
-    return "".join(page.extract_text() for page in reader.pages)
+    return "".join(page.extract_text() or '' for page in reader.pages)
 
-# Route to fetch available models
+def get_groq_response(prompt, model="llama3-70b-8192"):
+    try:
+        response = groq_client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            model=model,
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        raise RuntimeError(f"Groq API error: {e}")
+
+# -------- ROUTES --------
+
 @app.route('/models', methods=['GET'])
 def get_models():
-    model_options = [
+    return jsonify([
         {"value": "gemma2-9b-it", "name": "Gemma 2 9B"},
         {"value": "gemma-7b-it", "name": "Gemma 7B"},
         {"value": "llama3-groq-70b-8192-tool-use-preview", "name": "Llama 3 Groq 70B Tool Use (Preview)"},
@@ -52,30 +115,7 @@ def get_models():
         {"value": "llama3-70b-8192", "name": "Meta Llama 3 70B"},
         {"value": "llama3-8b-8192", "name": "Meta Llama 3 8B"},
         {"value": "mixtral-8x7b-32768", "name": "Mixtral 8x7B"},
-    ]
-    return jsonify(model_options)
-
-# Updated get_groq_response to use the provided Groq client usage pattern
-def get_groq_response(prompt, model="llama3-70b-8192"):
-    try:
-        # Log the prompt and model for debugging
-        print(f"Model: {model}")
-
-        chat_completion = groq_client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            model=model,
-        )
-
-        # Log the raw response for debugging
-        print(f"Raw response from Groq API: {chat_completion}")
-
-        return chat_completion.choices[0].message.content
-    except Exception as e:
-        print(f"Error with Groq API: {e}")
-        raise
+    ])
 
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
@@ -87,85 +127,62 @@ def evaluate():
         prompt = input_prompt.format(text=resume_text, jd=job_details['description'])
         groq_result = get_groq_response(prompt)
 
-        print(f"Groq raw output: {repr(groq_result)}")  # Debug
+        match = re.search(r'\{.*\}', groq_result, re.DOTALL)
+        if not match:
+            raise ValueError("No JSON object found in Groq response.")
 
-        # Debugging: Log the raw response before cleaning
-        print(f"Raw response before cleaning: {groq_result}")
+        cleaned = match.group(0)
+        cleaned = cleaned.replace("'", '"')
+        cleaned = re.sub(r'"(\d+)%"', r'"\1"', cleaned)
 
-        # Extract JSON object from the response
-        try:
-            # Updated regex to match balanced braces without recursion
-            match = re.search(r'\{[^{}]*\}', groq_result, re.DOTALL)
-            if not match:
-                print(f"Full Groq API response: {groq_result}")  # Log full response for debugging
-                raise ValueError("No valid JSON object found in the response")
-
-            cleaned = match.group(0).strip()
-            print(f"Extracted JSON string: {cleaned}")  # Debugging
-
-            # Handle quoted JSON
-            if cleaned.startswith('"') and cleaned.endswith('"'):
-                cleaned = cleaned[1:-1].replace('\\"', '"')
-                print(f"Unquoted JSON string: {cleaned}")  # Debugging
-
-            # Preprocess the JSON string to fix invalid syntax (e.g., percentages)
-            cleaned = re.sub(r'"(\d+)%"', r'"\1"', cleaned)
-            print(f"Preprocessed JSON string: {cleaned}")  # Debugging
-
-            # Replace single quotes with double quotes for valid JSON
-            cleaned = re.sub(r"'(.*?)'", r'"\1"', cleaned)
-            print(f"Cleaned JSON string with corrected quotes: {cleaned}")  # Debugging
-
-            # Additional preprocessing to handle invalid characters
-            cleaned = re.sub(r'\s+', ' ', cleaned).strip()  # Remove extra spaces
-            print(f"Final cleaned JSON string: {cleaned}")  # Debugging
-
-            # Attempt to load JSON
-            parsed = json.loads(cleaned)
-        except json.JSONDecodeError as e:
-            print(f"JSON parsing error: {e}")
-            print(f"Full Groq API response: {groq_result}")  # Log full response for debugging
-            raise ValueError("Failed to parse JSON from the response")
-
-        # Debugging: Log the parsed JSON object
-        print(f"Parsed JSON object: {parsed}")
-
-        # Safety net: ensure required fields are always present
-        # Ensure jd_match is treated as a string before calling replace
+        parsed = json.loads(cleaned)
         jd_match = str(parsed.get('JD Match', '0'))
-        try:
-            parsed['JDMatchPercentage'] = float(jd_match.replace("%", "").strip())
-        except ValueError:
-            print(f"Error converting JD Match to float: {jd_match}")
-            parsed['JDMatchPercentage'] = 0.0
+        parsed['JDMatchPercentage'] = float(jd_match.replace('%', '').strip())
+        parsed['MissingKeywords'] = ", ".join(parsed.get('MissingKeywords', []))
+        parsed['MatchingKeywords'] = ", ".join(parsed.get('MatchingKeywords', []))
+        parsed['ProfileSummary'] = parsed.get('Profile Summary', '')
 
-        # Fix isinstance usage to correctly check for list type
-        parsed['MissingKeywords'] = ", ".join(parsed.get('MissingKeywords', [])) if isinstance(parsed.get('MissingKeywords'), list) else parsed.get('MissingKeywords', 'N/A')
-        parsed['MatchingKeywords'] = ", ".join(parsed.get('MatchingKeywords', [])) if isinstance(parsed.get('MatchingKeywords'), list) else parsed.get('MatchingKeywords', 'N/A')
-        parsed['ProfileSummary'] = parsed.get('Profile Summary', 'N/A')
-
-        # Remove Groq-style keys
         parsed.pop('JD Match', None)
         parsed.pop('Profile Summary', None)
 
-        # Debugging: Log the final parsed dictionary before returning
-        print(f"Final Parsed Output: {parsed}")
+        return jsonify(parsed)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-        # Validate JSON serialization
-        try:
-            json.dumps(parsed)
-        except (TypeError, ValueError) as e:
-            print(f"Error serializing JSON: {e}")
-            raise ValueError("Response contains non-serializable data")
+@app.route('/extract_profile', methods=['POST'])
+def extract_profile():
+    try:
+        resume = request.files['resume']
+        resume_text = extract_text(resume)
+        prompt = profile_extraction_prompt.format(text=resume_text)
+        response = get_groq_response(prompt)
 
+        print(f"Full Groq response:\n{response}")
+
+        # Simple validation of JSON response
+        if not response.strip().startswith('{') or not response.strip().endswith('}'):
+            return jsonify({
+                'error': 'Incomplete JSON response from Groq API',
+                'message': 'The response is truncated or malformed.',
+                'groq_response': response
+            }), 500
+
+        # Attempt to parse entire response directly (avoid slicing)
+        parsed = json.loads(response)
         return jsonify(parsed)
 
+    except json.JSONDecodeError as jde:
+        print("JSONDecodeError:", jde)
+        return jsonify({'error': 'JSON decoding error', 'exception': str(jde), 'groq_response': response}), 500
+
     except Exception as e:
-        print(f"Error in evaluate endpoint: {e}")
-        return jsonify({
-            "error": "An error occurred",
-            "details": str(e)
-        }), 500
+        import traceback
+        tb = traceback.format_exc()
+        print("Exception:", e)
+        print(tb)
+        return jsonify({"error": str(e), "traceback": tb}), 500
+
+# -------- RUN --------
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True)

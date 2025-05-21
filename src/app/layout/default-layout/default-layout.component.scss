@@ -12,6 +12,9 @@
     display: flex;
     min-height: 100%;
   }
+  app-default-footer{
+  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+  }
 
   //.sidebar-nav {
   //  scrollbar-color: var(--cui-gray-500, #444) transparent;

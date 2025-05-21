@@ -2,12 +2,12 @@ import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
   {
-    name: 'Dashboard',
-    url: '/dashboard',
-    iconComponent: { name: 'cil-speedometer' },
+    name: 'HelpBot',
+    url: '/chatbot',
+    iconComponent: { name: 'cil-speech' },
     badge: {
       color: 'info',
-      text: 'NEW'
+      text: 'ASK ME ANYTHING'
     }
   },
   {
@@ -21,19 +21,13 @@ export const navItems: INavData[] = [
     attributes: {}
   },
   {
-    name: 'Offres De Travail',
+    name: 'Available Jobs',
     url: '/job',
-    iconComponent: { name: 'cil-briefcase' }
-  },
-  {
-    name: 'ChatBot',
-    url: '/chatbot',
-    iconComponent: { name: 'cil-speech' }
-  },
-  {
-    name: 'Candidate Management',
-    url: '/candidate',
-    iconComponent: { name: 'cil-people' }
+    iconComponent: { name: 'cil-briefcase' },
+    badge: {
+      color: 'info',
+      text: 'NEW'
+    }
   },
   {
     name: 'My Applications',

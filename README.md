@@ -1,491 +1,234 @@
-/* Card Styles */
-.card {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: none;
+````markdown
+# NeuroHr
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-}
+NeuroHr is a comprehensive Human Resources management platform designed to modernize recruitment processes by leveraging AI-driven resume evaluation and job matching. This full-stack application combines a modern Angular frontend, a robust .NET backend API, and a Python microservice for advanced resume analysis.
 
-.card-body {
-  padding: 1.5rem;
-}
+---
 
-/* Button Styles */
-.btn {
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
+## Table of Contents
 
-  &:hover {
-    transform: translateY(-2px);
-  }
-}
+- [Features](#features)  
+- [Tech Stack](#tech-stack)  
+- [Architecture](#architecture)  
+- [Installation](#installation)  
+  - [Prerequisites](#prerequisites)  
+  - [Frontend Setup](#frontend-setup)  
+  - [Backend Setup](#backend-setup)  
+  - [AI Microservice Setup](#ai-microservice-setup)  
+- [Configuration](#configuration)  
+- [Usage](#usage)  
+- [API Endpoints](#api-endpoints)  
+- [Contributing](#contributing)  
+- [License](#license)  
 
-.btn-primary {
-  background-color: #3f51b5;
-  border-color: #3f51b5;
-}
+---
 
-.btn-warning {
-  background-color: #ff9800;
-  border-color: #ff9800;
-  color: white;
-}
+## Features
 
-.btn-info {
-  background-color: #00acc1;
-  border-color: #00acc1;
-  color: white;
-}
+- **Job Management:** Create, update, delete, and list job postings with filtering by domain and contract type.
+- **User Roles:** Role-based access for candidates and HR personnel.
+- **Job Application:** Candidates can upload resumes and apply for jobs.
+- **AI-Powered Resume Evaluation:** Integration with a Python Flask microservice that analyzes resumes and returns matching scores, missing keywords, and profile summaries.
+- **Notifications:** User-friendly alerts and confirmations via SweetAlert2.
+- **Real-time UI Updates:** Reflect job application status dynamically.
+- **Secure Authentication:** JWT-based authentication and authorization.
+- **Responsive UI:** Modern Angular components with CoreUI integration.
 
-.btn-danger {
-  background-color: #f44336;
-  border-color: #f44336;
-  color: white;
+---
 
-  &:hover {
-    background-color: #d32f2f;
-    border-color: #d32f2f;
-  }
-}
+## Tech Stack
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .card {
-    margin-bottom: 1.5rem;
-  }
-  
-  .btn {
-    padding: 0.5rem;
-    font-size: 0.7rem;
-  }
-}
+| Layer             | Technology                |
+|-------------------|---------------------------|
+| Frontend          | Angular 19, TypeScript, RxJS, SweetAlert2, CoreUI Angular |
+| Backend API       | .NET 9 Web API, C#        |
+| AI Microservice   | Python 3, Flask, Groq API |
+| Database          | SQL Server (or any RDBMS) |
+| Authentication    | JWT, ASP.NET Identity     |
 
+---
 
-/* Modal Styles */
-.modal {
-  display: none;
-  &.show {
-    display: block;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-}
+## Architecture Overview
 
-.modal-dialog {
-  margin-top: 100px;
-}
+```plaintext
+[Angular Frontend] <--> [ASP.NET Backend API] <--> [SQL Server Database]
+                           |
+                           v
+                 [Python Flask AI Microservice]
+````
 
-.modal-content {
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
+* Frontend interacts with backend API for all CRUD operations.
+* Backend calls AI microservice to analyze uploaded resumes.
+* AI microservice returns structured evaluation data that backend stores and returns to frontend.
 
-.modal-header {
-  border-bottom: 1px solid #eee;
-  padding: 1rem 1.5rem;
-}
+---
 
-.modal-footer {
-  border-top: 1px solid #eee;
-  padding: 1rem 1.5rem;
-}
+## Installation
 
-/* Form Styles */
-.form-control {
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-  
-  &:focus {
-    border-color: #3f51b5;
-    box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
-  }
-}
+### Prerequisites
 
-textarea.form-control {
-  min-height: 100px;
-}
+* **Node.js** (v18 or higher)
+* **.NET SDK 9**
+* **Python 3.9+**
+* **SQL Server** or compatible database
+* **Git** (optional, for cloning repo)
 
-/* Button adjustments */
-.btn[disabled] {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-_____________________________________________________________________________________________________
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+---
 
-@Component({
-  selector: 'app-job-list',
-  templateUrl: './job-list.component.html',
-  styleUrls: ['./job-list.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule, 
-    RouterModule,
-    ReactiveFormsModule
-  ]
-})
-export class JobListComponent {
- /*  jobs: Job[] = [];
-  showModal = false;
+### Frontend Setup
 
-  
-  
-  // Initialize the form group with default values and validators
-  jobForm: FormGroup = this.fb.group({
-    title: ['', [Validators.required, Validators.minLength(3)]],
-    description: ['', [Validators.required, Validators.minLength(10)]],
-    location: ['', Validators.required]
-  });
+1. Navigate to the frontend folder:
 
-  constructor(
-    private jobService: JobService,
-    private fb: FormBuilder
-  ) {}
+   ```bash
+   cd NeuroHr-frontend
+   ```
 
-  ngOnInit(): void {
-    this.loadJobs();
-  }
+2. Install dependencies:
 
-  loadJobs(): void {
-    this.jobService.getJobs().subscribe({
-      next: (data: Job[]) => this.jobs = data,
-      error: (err) => console.error('Error loading jobs:', err)
-    });
-  }
+   ```bash
+   npm install
+   ```
 
-  openAddJobModal(): void {
-    this.showModal = true;
-  }
+3. Start the Angular development server:
 
-  closeModal(): void {
-    this.showModal = false;
-    this.jobForm.reset();
-  }
+   ```bash
+   npm run start
+   ```
 
-  onSubmit(): void {
-    if (this.jobForm.valid) {
-      this.jobService.createJob(this.jobForm.value).subscribe({
-        next: () => {
-          this.loadJobs();
-          this.closeModal();
-          // You could add a success toast/notification here
-        },
-        error: (err) => {
-          console.error('Error creating job:', err);
-          // You could show an error message to the user here
-        }
-      });
-    }
-  }
+4. Open your browser at [http://localhost:4200](http://localhost:4200)
 
-  deleteJob(id: number): void {
-    if (confirm('Are you sure you want to delete this job?')) {
-      this.jobService.deleteJob(id).subscribe({
-        next: () => this.loadJobs(),
-        error: (err) => console.error('Error deleting job:', err)
-      });
-    }
-  } */
-}
-_____________________________________________________________________________________________________
-<!--  <div class="container my-5">
-    <div class="d-flex justify-content-between mb-4">
-      <h2>Job Listings</h2>
-      <button class="btn btn-primary" (click)="openAddJobModal()">Add New Job</button>
-    </div>
-  
-   
-    <div class="row">
-      <div *ngFor="let job of jobs" class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ job.title }}</h5>
-            <p class="card-text">{{ job.description }}</p>
-            <p class="mt-auto"><strong>Location:</strong> {{ job.location }}</p>
-            
-            <div class="d-flex justify-content-between gap-2 mt-3">
-              <button class="btn btn-warning flex-grow-1">Update</button>
-              <button class="btn btn-info flex-grow-1">Details</button>
-              <button class="btn btn-danger flex-grow-1" (click)="deleteJob(job.id)">Delete</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
- 
-<div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Add New Job</h5>
-        <button type="button" class="btn-close" (click)="closeModal()"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
-          <div class="row">
-          
-            <div class="col-md-6">
-            
-              <div class="mb-3">
-                <label for="title" class="form-label">Job Title</label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="title" 
-                  formControlName="title"
-                  [class.is-invalid]="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
-                
-                <div *ngIf="jobForm.get('title')?.errors?.['required'] && jobForm.get('title')?.touched" 
-                     class="invalid-feedback">
-                  Title is required
-                </div>
-              </div>
-              
-             
-              <div class="mb-3">
-                <label for="location" class="form-label">Location</label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="location" 
-                  formControlName="location"
-                  [class.is-invalid]="jobForm.get('location')?.invalid && jobForm.get('location')?.touched">
-                
-                <div *ngIf="jobForm.get('location')?.errors?.['required'] && jobForm.get('location')?.touched" 
-                     class="invalid-feedback">
-                  Location is required
-                </div>
-              </div>
-              
-            
-              <div class="mb-3">
-                <label for="postedDate" class="form-label">Posted Date</label>
-                <input 
-                  type="date" 
-                  class="form-control" 
-                  id="postedDate" 
-                  formControlName="postedDate"
-                  [class.is-invalid]="jobForm.get('postedDate')?.invalid && jobForm.get('postedDate')?.touched">
-              </div>
-              
-            
-              <div class="mb-3">
-                <label for="experience" class="form-label">Experience Required</label>
-                <select 
-                  class="form-select" 
-                  id="experience" 
-                  formControlName="experience"
-                  [class.is-invalid]="jobForm.get('experience')?.invalid && jobForm.get('experience')?.touched">
-                  <option value="">Select experience level</option>
-                  <option value="Sans experinece">No experience</option>
-                  <option value="1 a 3 ans">1 to 3 years</option>
-                  <option value="3 a 5 ans">3 to 5 years</option>
-                </select>
-              </div>
-              
-             
-              <div class="mb-3">
-                <label for="typeDeContrat" class="form-label">Contract Type</label>
-                <select 
-                  class="form-select" 
-                  id="typeDeContrat" 
-                  formControlName="typeDeContrat"
-                  [class.is-invalid]="jobForm.get('typeDeContrat')?.invalid && jobForm.get('typeDeContrat')?.touched">
-                  <option value="">Select contract type</option>
-                  <option value="CDI">Permanent (CDI)</option>
-                  <option value="CDD">Fixed-term (CDD)</option>
-                  <option value="SIVP">Internship (SIVP)</option>
-                </select>
-              </div>
-            </div>
-            
-          
-            <div class="col-md-6">
-            
-              <div class="mb-3">
-                <label for="typeDeTravail" class="form-label">Work Type</label>
-                <select 
-                  class="form-select" 
-                  id="typeDeTravail" 
-                  formControlName="typeDeTravail"
-                  [class.is-invalid]="jobForm.get('typeDeTravail')?.invalid && jobForm.get('typeDeTravail')?.touched">
-                  <option value="">Select work type</option>
-                  <option value="Plein Temps Présentiel">Full-time On-site</option>
-                  <option value="Mis Temps Présentiel">Part-time On-site</option>
-                  <option value="Plein Temps Présentiel">Full-time Remote</option>
-                </select>
-              </div>
-              
-             
-              <div class="mb-3">
-                <label for="diplome" class="form-label">Required Diploma</label>
-                <select 
-                  class="form-select" 
-                  id="diplome" 
-                  formControlName="diplome"
-                  [class.is-invalid]="jobForm.get('diplome')?.invalid && jobForm.get('diplome')?.touched">
-                  <option value="">Select diploma level</option>
-                  <option value="Baccalauréat">High School Diploma</option>
-                  <option value="licence">Bachelor's Degree</option>
-                  <option value="master">Master's Degree</option>
-                  <option value="Ingenieur">Engineering Degree</option>
-                  <option value="autre">Other</option>
-                </select>
-              </div>
-              
-             
-              <div class="mb-3">
-                <label for="profil" class="form-label">Profile</label>
-                <textarea 
-                  class="form-control" 
-                  id="profil" 
-                  rows="2" 
-                  formControlName="profil"
-                  [class.is-invalid]="jobForm.get('profil')?.invalid && jobForm.get('profil')?.touched"></textarea>
-              </div>
-              
-              
-              <div class="mb-3">
-                <label for="mission" class="form-label">Missions</label>
-                <textarea 
-                  class="form-control" 
-                  id="mission" 
-                  rows="2" 
-                  formControlName="mission"
-                  [class.is-invalid]="jobForm.get('mission')?.invalid && jobForm.get('mission')?.touched"></textarea>
-              </div>
-            </div>
-          </div>
-          
-          
-          <div class="mb-3">
-            <label for="description" class="form-label">Job Description</label>
-            <textarea 
-              class="form-control" 
-              id="description" 
-              rows="4" 
-              formControlName="description"
-              [class.is-invalid]="jobForm.get('description')?.invalid && jobForm.get('description')?.touched"></textarea>
-            
-            <div *ngIf="jobForm.get('description')?.errors?.['required'] && jobForm.get('description')?.touched" 
-                 class="invalid-feedback">
-              Description is required
-            </div>
-          </div>
-          
-         
-          <div class="mb-3">
-            <label for="canditionsDetavail" class="form-label">Work Conditions</label>
-            <textarea 
-              class="form-control" 
-              id="canditionsDetavail" 
-              rows="2" 
-              formControlName="canditionsDetavail"
-              [class.is-invalid]="jobForm.get('canditionsDetavail')?.invalid && jobForm.get('canditionsDetavail')?.touched"></textarea>
-          </div>
-          
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="jobForm.invalid">Save Job</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+---
+
+### Backend Setup
+
+1. Navigate to the backend folder:
+
+   ```bash
+   cd NeuroHr-backend
+   ```
+
+2. Restore .NET dependencies:
+
+   ```bash
+   dotnet restore
+   ```
+
+3. Configure your database connection in `appsettings.json`:
+
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=YOUR_SERVER;Database=NeuroHrDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+   }
+   ```
+
+4. Run database migrations if applicable (e.g., EF Core migrations).
+
+5. Start the backend API server:
+
+   ```bash
+   dotnet run
+   ```
+
+---
+
+### AI Microservice Setup
+
+1. Navigate to the AI microservice folder:
+
+   ```bash
+   cd NeuroHr-ai-service
+   ```
+
+2. Create and activate a virtual environment:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # Linux/macOS
+   venv\Scripts\activate      # Windows
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Run the Flask app:
+
+   ```bash
+   python app.py
+   ```
+
+5. The AI service will be accessible at `http://localhost:5000`
+
+---
+
+## Configuration
+
+* **API URLs:** Ensure Angular services point to your backend URLs (`http://localhost:5183/api/...`) and AI microservice URL (`http://localhost:5000/evaluate`)
+* **CORS:** Configure CORS policies in backend and AI service to allow frontend requests.
+* **Authentication:** Update JWT secret keys and token expiration settings in backend `appsettings.json`.
+* **Database:** Adjust connection strings and run EF migrations or SQL scripts.
+
+---
+
+## Usage
+
+* Register or log in as a Candidate or HR.
+* Browse jobs filtered by domain or contract type.
+* Candidates upload resumes to apply for jobs.
+* Applications are analyzed by AI microservice and results stored.
+* HR users manage job postings and view candidate applications with AI insights.
+* Notifications and confirmation dialogs improve user experience.
+
+---
+
+## API Endpoints (Sample)
+
+| Endpoint                                | Method | Description                        |
+| --------------------------------------- | ------ | ---------------------------------- |
+| `/api/Auth/register`                    | POST   | Register new user                  |
+| `/api/Auth/login`                       | POST   | Authenticate user and return JWT   |
+| `/api/Job`                              | GET    | Get list of jobs                   |
+| `/api/Job`                              | POST   | Create a new job (HR only)         |
+| `/api/Job/{id}`                         | PUT    | Update job by id (HR only)         |
+| `/api/Job/{id}`                         | DELETE | Delete job by id (HR only)         |
+| `/api/JobApplication`                   | POST   | Submit a job application           |
+| `/api/JobApplication/user/applied-jobs` | GET    | Get jobs applied by the user       |
+| `/evaluate` (Python service)            | POST   | Analyze resume against job details |
+
+---
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/my-feature`).
+3. Commit your changes (`git commit -am 'Add some feature'`).
+4. Push to the branch (`git push origin feature/my-feature`).
+5. Open a pull request.
+
+Please make sure to follow existing code style and add tests where appropriate.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+
+If you have any questions or suggestions, feel free to reach out:
+
+* **Author:** \[Ahlem Ben Mohamed - Nour Elhouda el khedhri]
+* **Email:** [benmohamedahlemm@gmail.com](mailto:benmohamedahlemm@gmail.com)
+* **Email:** [nourkhedri0206@gmail.com](mailto:nourkhedri0206@gmail.com)
 
 
-<div class="modal-backdrop fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'"></div>
-   
+---
 
-
-   Add Job Modal 
-    <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add New Job</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
-          </div>
-          <div class="modal-body">
-            <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
-              <div class="mb-3">
-                <label for="title" class="form-label">Job Title</label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="title" 
-                  formControlName="title"
-                  [class.is-invalid]="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
-                
-                <div *ngIf="jobForm.get('title')?.errors?.['required'] && jobForm.get('title')?.touched" 
-                     class="invalid-feedback">
-                  Title is required
-                </div>
-                <div *ngIf="jobForm.get('title')?.errors?.['minlength']" 
-                     class="invalid-feedback">
-                  Minimum 3 characters required
-                </div>
-              </div>
-              
-              <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea 
-                  class="form-control" 
-                  id="description" 
-                  rows="3" 
-                  formControlName="description"
-                  [class.is-invalid]="jobForm.get('description')?.invalid && jobForm.get('description')?.touched"></textarea>
-                
-                <div *ngIf="jobForm.get('description')?.errors?.['required'] && jobForm.get('description')?.touched" 
-                     class="invalid-feedback">
-                  Description is required
-                </div>
-                <div *ngIf="jobForm.get('description')?.errors?.['minlength']" 
-                     class="invalid-feedback">
-                  Minimum 10 characters required
-                </div>
-              </div>
-              
-              <div class="mb-3">
-                <label for="location" class="form-label">Location</label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="location" 
-                  formControlName="location"
-                  [class.is-invalid]="jobForm.get('location')?.invalid && jobForm.get('location')?.touched">
-                
-                <div *ngIf="jobForm.get('location')?.errors?.['required'] && jobForm.get('location')?.touched" 
-                     class="invalid-feedback">
-                  Location is required
-                </div>
-              </div>
-              
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-                <button type="submit" class="btn btn-primary" [disabled]="jobForm.invalid">Save Job</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    
-    <div class="modal-backdrop fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'"></div>
-   -->
+Thank you for using **NeuroHr** — empowering smarter hiring with AI!
+```

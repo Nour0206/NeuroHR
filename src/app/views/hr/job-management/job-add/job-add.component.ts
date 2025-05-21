@@ -3,14 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { JobService } from  '../../../../services/job.service';
+import { JobService } from '../../../../services/job.service';
+import { ToastrService } from 'ngx-toastr'; // ✅ Import toaster
 
 @Component({
   selector: 'app-job-add',
   templateUrl: './job-add.component.html',
   styleUrls: ['./job-add.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, ReactiveFormsModule, RouterModule]
+  imports: [ReactiveFormsModule, CommonModule, RouterModule]
 })
 export class JobAddComponent {
   jobForm!: FormGroup;
@@ -50,7 +51,12 @@ export class JobAddComponent {
     { value: 'Internship', label: 'Internship' }
   ];
 
-  constructor(private fb: FormBuilder,private router: Router, private jobService: JobService) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private jobService: JobService,
+    private toastr: ToastrService // ✅ Inject toaster
+  ) {}
 
   ngOnInit(): void {
     this.jobForm = this.fb.group({
@@ -72,22 +78,18 @@ export class JobAddComponent {
 
   onSubmit(): void {
     if (this.jobForm.valid) {
-      console.log('Form Values:', this.jobForm.value); // Log form values
       this.jobService.createJob(this.jobForm.value).subscribe({
         next: () => {
-          alert('Job created successfully!');
-          this.router.navigate(['/job']); // Navigate back to the job list
+          this.toastr.success('Job created successfully!', 'Success ✅');
+          this.router.navigate(['/job']);
         },
         error: (err) => {
           console.error('Error creating job:', err.error);
-          alert('Failed to create job. Please try again.');
+          this.toastr.error('Failed to create job. Please try again.', 'Error ❌');
         }
       });
     } else {
-      alert('Please fill in all required fields.');
+      this.toastr.warning('Please fill in all required fields.', 'Warning ⚠️');
     }
   }
-
-
-
 }

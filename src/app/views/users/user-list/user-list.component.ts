@@ -6,6 +6,7 @@ import { User } from '../../../models/user.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   standalone: true,
@@ -56,7 +57,7 @@ export class UserListComponent  implements OnInit {
     // Set userIsAdmin based on the user's role
     this.userIsAdmin = userInfo.roles?.includes('Admin') || false;
     console.log('User Info:', userInfo); // Debugging log
-    console.log('User Roles:', userInfo['roles']); // Debugging log  
+    console.log('User Roles:', userInfo['roles']); // Debugging log
   }
 
   loadUsers(): void {
@@ -109,11 +110,27 @@ export class UserListComponent  implements OnInit {
   }
 
   deleteUser(id: string): void {
-    if (confirm('Are you sure you want to delete this user?')) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this user?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.userService.deleteUser(id).subscribe({
-        next: () => this.loadUsers(),
-        error: (err) => console.error('Error deleting user:', err)
+        next: () => {
+          this.loadUsers();
+          Swal.fire('Deleted!', 'User has been deleted.', 'success');
+        },
+        error: (err) => {
+          console.error('Error deleting user:', err);
+          Swal.fire('Error', 'Failed to delete user.', 'error');
+        }
       });
     }
-  }
+  });
+}
 }

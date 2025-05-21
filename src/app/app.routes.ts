@@ -76,6 +76,13 @@ export const routes: Routes = [
       title: 'User Job Applications'
     }
   },
+      
+      {
+        path: 'profile',
+        loadComponent: () => import('./views/profile/profile.component').then(m => m.ProfileComponent),
+        canActivate: [AuthGuard],
+        data: { title: 'Profile' }
+      },
 
     ]
   },
@@ -114,6 +121,14 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   },
+  {
+        path: 'onboarding',
+        loadComponent: () => import('./views/profile-onboarding/profile-onboarding.component').then(m => m.ProfileOnboardingComponent)
+      },
+  {
+        path: 'firstLogin',
+        loadComponent: () => import('./views/pages/firstlogin/firstlogin.component').then(m => m.firstLoginComponent)
+      },
   {
     path: 'user-job-applications',
     loadComponent: () => import('../app/views/job-applications/user-job/user-job-applications.component').then(m => m.UserJobApplicationsComponent),

@@ -2,7 +2,7 @@ export type ApplicationStatus = 'Pending' | 'Reviewed' | 'Interviewing' | 'Offer
 
 export interface JobApplication {
   id?: number;
-  userId?: string; // Replace createdBy with userId to match the backend structure
+  userId?: string; 
   jobPostingId?: number;
   appliedOn?: Date;
   status?: ApplicationStatus;
@@ -10,7 +10,6 @@ export interface JobApplication {
   missingKeywords?: string;
   matchingKeywords?: string;
   profileSummary?: string;
-  // Optional property to store the fetched username
   userName?: string;
 }
 

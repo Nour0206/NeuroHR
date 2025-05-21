@@ -1,0 +1,164 @@
+<div *ngIf="loading" class="loading-card card">
+  <div class="card-body">
+    <p>Loading profile...</p>
+  </div>
+</div>
+
+<div *ngIf="errorMsg" class="error-card card">
+  <div class="card-header">
+    <h3>Error</h3>
+  </div>
+  <div class="card-body">
+    <p>{{ errorMsg }}</p>
+  </div>
+</div>
+
+<div *ngIf="userProfile && !loading" class="resume-container">
+  <!-- Profile Header Card -->
+  <div class="card profile-card">
+    <div class="card-header"><h1 class="profile-name">{{ userProfile?.name }}</h1></div>
+    <div class="card-body">
+      <!-- Uncomment if you have profile pictures -->
+      <!-- <img class="profile-pic" [src]="assets/neurohr.png" alt="Profile Picture"> -->
+      <div class="contact-info">
+        <div class="contact-item">
+          <i>📧</i> {{ userProfile?.email }}
+        </div>
+        <div class="contact-item">
+          <i>👤</i> {{ userProfile?.username }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Summary Card -->
+  <div class="card">
+    <div class="card-header">
+      <h3>About Me</h3>
+    </div>
+    <div class="card-body">
+      <textarea
+        [(ngModel)]="userProfile.profileSummary"
+        rows="4"
+        [readonly]="!editMode"
+        class="edit-mode-input"
+        placeholder="Write a professional summary about yourself..."
+      ></textarea>
+    </div>
+  </div>
+
+  <!-- Professional Experience Card -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Professional Experience</h3>
+    </div>
+    <div class="card-body">
+      <div *ngFor="let item of userProfile?.professionalExperiences; let i = index" class="timeline-item">
+        <div class="timeline-date">{{ item.startDate }} - {{ item.endDate || 'Present' }}</div>
+        <h4 class="timeline-title">{{ item.jobTitle }}</h4>
+        <p class="timeline-subtitle">{{ item.company }}</p>
+        <p>{{ item.description }}</p>
+        <button *ngIf="editMode" class="remove-btn" (click)="removeEntry('professionalExperiences', i)">×</button>
+      </div>
+
+      <div *ngIf="editMode" class="add-entry-container">
+        <input class="edit-mode-input" [(ngModel)]="newEntry['professionalExperiences']"
+               placeholder='{"jobTitle":"Position","company":"Company","startDate":"YYYY","endDate":"YYYY","description":"Description"}' />
+        <button class="btn btn-outline" (click)="addEntry('professionalExperiences')">Add Experience</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Education Card -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Education</h3>
+    </div>
+    <div class="card-body">
+      <div *ngFor="let item of userProfile?.education; let i = index" class="timeline-item">
+        <div class="timeline-date">{{ item.year }}</div>
+        <h4 class="timeline-title">{{ item.degree }}</h4>
+        <p class="timeline-subtitle">{{ item.institution }}</p>
+        <button *ngIf="editMode" class="remove-btn" (click)="removeEntry('education', i)">×</button>
+      </div>
+
+      <div *ngIf="editMode" class="add-entry-container">
+        <input class="edit-mode-input" [(ngModel)]="newEntry['education']"
+               placeholder='{"degree":"Degree","institution":"University","year":"YYYY"}' />
+        <button class="btn btn-outline" (click)="addEntry('education')">Add Education</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects Card -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Projects</h3>
+    </div>
+    <div class="card-body">
+      <div *ngFor="let item of userProfile?.projects; let i = index" class="timeline-item">
+        <h4 class="timeline-title">{{ item.title }}</h4>
+        <p>{{ item.description }}</p>
+        <div>
+          <span *ngFor="let tech of item.technologies" class="skill-badge">{{ tech }}</span>
+        </div>
+        <button *ngIf="editMode" class="remove-btn" (click)="removeEntry('projects', i)">×</button>
+      </div>
+
+      <div *ngIf="editMode" class="add-entry-container">
+        <input class="edit-mode-input" [(ngModel)]="newEntry['projects']"
+               placeholder='{"title":"Project Name","description":"Description","technologies":["Tech1","Tech2"]}' />
+        <button class="btn btn-outline" (click)="addEntry('projects')">Add Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills & Languages Card -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Skills & Languages</h3>
+    </div>
+    <div class="card-body">
+      <h4 class="section-title">Languages</h4>
+      <div>
+        <span *ngFor="let item of userProfile?.languages; let i = index" class="skill-badge">
+          {{ item }}
+          <button *ngIf="editMode" class="remove-btn" (click)="removeEntry('languages', i)">×</button>
+        </span>
+      </div>
+
+      <div *ngIf="editMode" class="add-entry-container">
+        <input class="edit-mode-input" [(ngModel)]="newEntry['languages']" placeholder="Language name" />
+        <button class="btn btn-outline" (click)="addEntry('languages')">Add Language</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certifications Card -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Certifications</h3>
+    </div>
+    <div class="card-body">
+      <div *ngFor="let item of userProfile?.certifications; let i = index" class="timeline-item">
+        <div class="timeline-date">{{ item.year }}</div>
+        <h4 class="timeline-title">{{ item.name }}</h4>
+        <p class="timeline-subtitle">{{ item.institution }}</p>
+        <button *ngIf="editMode" class="remove-btn" (click)="removeEntry('certifications', i)">×</button>
+      </div>
+
+      <div *ngIf="editMode" class="add-entry-container">
+        <input class="edit-mode-input" [(ngModel)]="newEntry['certifications']"
+               placeholder='{"name":"Certification","institution":"Issuer","year":"YYYY"}' />
+        <button class="btn btn-outline" (click)="addEntry('certifications')">Add Certification</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button *ngIf="!editMode" class="btn btn-primary" (click)="editMode = true">Edit Profile</button>
+    <button *ngIf="editMode" class="btn btn-primary" (click)="saveProfile()">Save Changes</button>
+    <button *ngIf="editMode" class="btn btn-outline" (click)="cancelEdit()">Cancel</button>
+  </div>
+</div>

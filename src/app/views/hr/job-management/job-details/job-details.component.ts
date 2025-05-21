@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { JobService } from '../../../../services/job.service';
 import { CommonModule } from '@angular/common';
 import { Job } from '../../../../models/job';
+import { AuthService } from '../../../../services/auth.service';
 
 // Define enum-like types for better type safety
 type ExperienceLevel = 'NoExperience' | 'OneToThreeYears' | 'ThreeToFiveYears';
@@ -22,6 +23,7 @@ export class JobDetailsComponent implements OnInit {
   job?: Job;
   isLoading = true;
   error: string | null = null;
+  userRole: string = '';
 
   // Properly typed mapping objects
   readonly experienceLevels: Record<ExperienceLevel, string> = {
@@ -58,10 +60,12 @@ export class JobDetailsComponent implements OnInit {
     DevOps: 'DevOps',
     Other: 'Other'
   };
+  userIsHR: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
-    private jobService: JobService
+    private jobService: JobService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +73,12 @@ export class JobDetailsComponent implements OnInit {
     if (!jobId || isNaN(+jobId)) {
       this.error = 'Invalid job ID';
       this.isLoading = false;
+      const userInfo = this.authService.getUserInfo();
+      if (userInfo && userInfo.roles) {
+        console.log('User Roles:', userInfo.roles); // Debugging log
+        this.userRole = userInfo.roles.includes('HR') ? 'HR' : 'User';
+    }
+      this.userIsHR = this.isHR();
       return;
     }
 
@@ -116,7 +126,9 @@ export class JobDetailsComponent implements OnInit {
   getDomain(): string {
     return this.job ? this.domains[this.job.domaine as Domain] : '';
   }
-
+  isHR(): boolean {
+      return this.userRole === 'HR';
+    }
   getJobType(): string {
     return this.job ? this.jobTypes[this.job.type as JobType] : '';
   }

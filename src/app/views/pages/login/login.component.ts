@@ -1,38 +1,50 @@
 import { Component } from '@angular/core';
-import {CommonModule, NgStyle} from '@angular/common';
-import { IconDirective } from '@coreui/icons-angular';
-import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-
+import { ToastrService } from 'ngx-toastr';
+import {
+  ContainerComponent, RowComponent, ColComponent, CardGroupComponent,
+  TextColorDirective, CardComponent, CardBodyComponent, FormDirective,
+  InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective
+} from '@coreui/angular';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { CommonModule, NgStyle } from '@angular/common';
+import { IconDirective } from '@coreui/icons-angular';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone:true,
-    imports: [ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, NgStyle,ReactiveFormsModule
-      ,CommonModule,RouterModule]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [
+    ContainerComponent, RowComponent, ColComponent, CardGroupComponent,
+    TextColorDirective, CardComponent, CardBodyComponent, FormDirective,
+    InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective,
+    ButtonDirective, NgStyle, ReactiveFormsModule, CommonModule, RouterModule
+  ]
 })
 export class LoginComponent {
   loginForm!: FormGroup;
-   showPassword = false; // Add this property
-  rememberMe = false;   // Add this property if using remember me checkbox
+  showPassword = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
-       /*  rememberMe: [false] */ 
     });
   }
 
-   togglePasswordVisibility(): void {
+  togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
+
   onLogin(): void {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
@@ -40,65 +52,20 @@ export class LoginComponent {
           this.authService.saveToken(res.token);
           const userInfo = this.authService.getUserInfo();
           const roles = userInfo?.roles ?? [];
-         if (roles.includes('ADMIN')) {
-  this.router.navigate(['/users']);
-} else if (roles.includes('CANDIDATE')) {
-  this.router.navigate(['/candidates']);
-} else if (roles.includes('HR')) {
-  this.router.navigate(['/hr-dashboard']);
-} else {
-  // fallback générique
-  this.router.navigate(['/users']);
-}
+
+          this.toastr.success('Login successful', 'Welcome!');
+          if (roles.includes('ADMIN')) {
+            this.router.navigate(['/users']);
+          } else {
+            this.router.navigate(['/job']);
+          }
         },
-        error: () => alert('Invalid credentials')
+        error: () => {
+          this.toastr.error('Invalid credentials', 'Login Failed');
+        }
       });
+    } else {
+      this.toastr.warning('Please fill in all fields', 'Form Incomplete');
     }
   }
-
-
-  /* // Initialize Google Login button
-  initializeGoogleLogin(): void {
-    window.onload = () => {
-      google.accounts.id.initialize({
-        client_id: '721840243575-huqbncs3rme0n04snvgs12u89gi54hm5.apps.googleusercontent.com', // Your client ID
-       callback: (response: any) => this.handleGoogleLoginResponse(response)
-
-      });
-
-      google.accounts.id.renderButton(
-        document.getElementById('googleLoginButton'), // This is where the button will render
-        { theme: 'outline', size: 'large' }           // Optional styling
-      );
-    };
-  }
-
-  // Handle the login response from Google
-  handleGoogleLoginResponse(response: any): void {
-    const idToken = response.credential;
-
-    // Send the idToken to your backend for validation
-    this.loginWithGoogle(idToken);
-  }
-
-  // Send the token to your backend for validation and get the JWT
-  loginWithGoogle(idToken: string): void {
-    fetch('http://localhost:5183/api/Auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ idToken })
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Store the JWT token (or other user details)
-      localStorage.setItem('auth_token', data.token);
-      this.router.navigate(['/dashboard']); // Redirect to the dashboard
-    })
-    .catch(error => {
-      console.error('Google login error:', error);
-    });
-  }
-   */
-  }
+}

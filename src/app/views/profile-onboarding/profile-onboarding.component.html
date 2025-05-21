@@ -1,0 +1,352 @@
+<div class="onboarding-container">
+  <ng-container [ngSwitch]="step">
+    <!-- Step 1: Choice -->
+    <div *ngSwitchCase="'choice'" class="card choice-card">
+      <div class="card-body text-center">
+        <h2 class="card-title">Complete Your Profile</h2>
+        <p class="card-text">Would you like to upload your resume for automatic extraction, or enter your information manually?</p>
+        <div class="d-grid gap-2 d-md-block">
+          <button class="btn btn-primary me-2" (click)="startUpload()">Upload Resume</button>
+          <button class="btn btn-outline-primary" (click)="startManualEntry()">Enter Manually</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Upload Resume -->
+    <div *ngSwitchCase="'upload'" class="card upload-card">
+      <div class="card-body">
+        <h3 class="card-title">Upload Your Resume</h3>
+        <div class="mb-3">
+          <label for="resumeUpload" class="form-label">Resume File</label>
+          <input
+            id="resumeUpload"
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="application/pdf,.doc,.docx"
+            title="Upload your resume file"
+            class="form-control"
+          />
+        </div>
+        <div class="d-flex gap-2">
+          <button
+            class="btn btn-primary"
+            [disabled]="!resumeFile || uploading"
+            (click)="uploadResume()"
+          >
+            {{ uploading ? 'Uploading...' : 'Upload & Extract' }}
+          </button>
+          <button class="btn btn-outline-secondary" (click)="step = 'choice'">Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Manual Entry -->
+    <div *ngSwitchCase="'manual'" class="manual-entry-container">
+      <div class="card manual-entry-card">
+        <div class="card-body">
+          <h3 class="card-title mb-4">Enter Your Profile Information</h3>
+
+          <!-- Professional Experiences -->
+          <section class="mb-4 section-card">
+            <div class="section-header">
+              <h4>Professional Experiences</h4>
+            </div>
+            <div class="section-body">
+              <ul class="experience-list">
+                <li *ngFor="let item of userProfile.professionalExperiences; let i = index">
+                  <div class="experience-item">
+                    <div class="experience-header">
+                      <strong>{{ item.jobTitle }}</strong> at {{ item.company }}
+                      <span class="experience-dates">({{ item.startDate | date:'MMM yyyy' }} - {{ item.endDate ? (item.endDate | date:'MMM yyyy') : 'Present' }})</span>
+                    </div>
+                    <p class="experience-description">{{ item.description }}</p>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="removeProfessionalExperience(i)"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              </ul>
+
+              <div class="add-experience-form">
+                <input
+                  [(ngModel)]="newProfessionalExperience.jobTitle"
+                  placeholder="Job Title"
+                  class="form-control mb-2"
+                />
+                <input
+                  [(ngModel)]="newProfessionalExperience.company"
+                  placeholder="Company"
+                  class="form-control mb-2"
+                />
+                <div class="row g-2 mb-2">
+                  <div class="col-md-6">
+                    <input
+                      [(ngModel)]="newProfessionalExperience.startDate"
+                      type="month"
+                      placeholder="Start Date"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <input
+                      [(ngModel)]="newProfessionalExperience.endDate"
+                      type="month"
+                      placeholder="End Date (or leave empty)"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+                <textarea
+                  [(ngModel)]="newProfessionalExperience.description"
+                  placeholder="Description"
+                  class="form-control mb-3"
+                  rows="2"
+                ></textarea>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="!newProfessionalExperience.jobTitle || !newProfessionalExperience.company || !newProfessionalExperience.startDate"
+                  (click)="addProfessionalExperience()"
+                >
+                  Add Experience
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Education -->
+          <section class="mb-4 section-card">
+            <div class="section-header">
+              <h4>Education</h4>
+            </div>
+            <div class="section-body">
+              <ul class="education-list">
+                <li *ngFor="let item of userProfile.education; let i = index">
+                  <div class="education-item">
+                    <div class="education-details">
+                      <strong>{{ item.degree }}</strong> from {{ item.institution }} ({{ item.year }})
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="removeEducation(i)"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              </ul>
+              <div class="add-education-form">
+                <input
+                  [(ngModel)]="newEducation.degree"
+                  placeholder="Degree"
+                  class="form-control mb-2"
+                />
+                <input
+                  [(ngModel)]="newEducation.institution"
+                  placeholder="Institution"
+                  class="form-control mb-2"
+                />
+                <input
+                  [(ngModel)]="newEducation.year"
+                  type="number"
+                  min="1900"
+                  max="2100"
+                  placeholder="Year"
+                  class="form-control mb-3"
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="!newEducation.degree || !newEducation.institution || !newEducation.year"
+                  (click)="addEducation()"
+                >
+                  Add Education
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Projects -->
+          <section class="mb-4 section-card">
+            <div class="section-header">
+              <h4>Projects</h4>
+            </div>
+            <div class="section-body">
+              <ul class="project-list">
+                <li *ngFor="let item of userProfile.projects; let i = index">
+                  <div class="project-item">
+                    <div class="project-header">
+                      <strong>{{ item.title }}</strong>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        (click)="removeProject(i)"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <p class="project-description">{{ item.description }}</p>
+                    <p class="project-technologies"><em>Technologies:</em> {{ item.technologies.join(', ') }}</p>
+                  </div>
+                </li>
+              </ul>
+
+              <div class="add-project-form">
+                <input
+                  [(ngModel)]="newProject.title"
+                  placeholder="Project Title"
+                  class="form-control mb-2"
+                />
+                <textarea
+                  [(ngModel)]="newProject.description"
+                  placeholder="Description"
+                  class="form-control mb-2"
+                  rows="2"
+                ></textarea>
+                <input
+                  [(ngModel)]="newProject.technologies"
+                  placeholder="Technologies (comma separated)"
+                  class="form-control mb-3"
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="!newProject.title"
+                  (click)="addProject()"
+                >
+                  Add Project
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Certifications -->
+          <section class="mb-4 section-card">
+            <div class="section-header">
+              <h4>Certifications</h4>
+            </div>
+            <div class="section-body">
+              <ul class="certification-list">
+                <li *ngFor="let item of userProfile.certifications; let i = index">
+                  <div class="certification-item">
+                    <div class="certification-details">
+                      <strong>{{ item.name }}</strong> from {{ item.institution }} ({{ item.year }})
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="removeCertification(i)"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              </ul>
+              <div class="add-certification-form">
+                <input
+                  [(ngModel)]="newCertification.name"
+                  placeholder="Certification Name"
+                  class="form-control mb-2"
+                />
+                <input
+                  [(ngModel)]="newCertification.institution"
+                  placeholder="Institution"
+                  class="form-control mb-2"
+                />
+                <input
+                  [(ngModel)]="newCertification.year"
+                  type="number"
+                  min="1900"
+                  max="2100"
+                  placeholder="Year"
+                  class="form-control mb-3"
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="!newCertification.name || !newCertification.institution || !newCertification.year"
+                  (click)="addCertification()"
+                >
+                  Add Certification
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Languages -->
+          <section class="mb-4 section-card">
+            <div class="section-header">
+              <h4>Languages</h4>
+            </div>
+            <div class="section-body">
+              <ul class="language-list">
+                <li *ngFor="let lang of userProfile.languages; let i = index">
+                  <div class="language-item">
+                    <span class="language-name">{{ lang }}</span>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="removeLanguage(i)"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              </ul>
+              <div class="add-language-form">
+                <input
+                  [(ngModel)]="newLanguage"
+                  placeholder="Add new language"
+                  class="form-control mb-3"
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="!newLanguage"
+                  (click)="addLanguage()"
+                >
+                  Add Language
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Profile Summary -->
+          <section class="mb-4 section-card">
+            <div class="section-header">
+              <h4>Profile Summary</h4>
+            </div>
+            <div class="section-body">
+              <textarea
+                id="profileSummary"
+                [(ngModel)]="userProfile.profileSummary"
+                class="form-control"
+                placeholder="Enter a brief summary about yourself"
+                rows="3"
+              ></textarea>
+            </div>
+          </section>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" (click)="saveProfile()">Submit</button>
+            <button class="btn btn-outline-secondary" (click)="step = 'choice'">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<div *ngIf="uploading" class="upload-status">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Uploading...</span>
+  </div>
+  <p>Uploading your resume...</p>
+</div>
+
+<div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>

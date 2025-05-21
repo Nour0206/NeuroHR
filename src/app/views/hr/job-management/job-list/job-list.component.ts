@@ -6,12 +6,15 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Job } from '../../../../models/job';
 import { AuthService } from '../../../../services/auth.service';
 import { JobService } from '../../../../services/job.service';
+import { ToastrService } from 'ngx-toastr'; // ✅ Import Toastr
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-job-list',
   templateUrl: './job-list.component.html',
   styleUrls: ['./job-list.component.scss'],
   standalone: true,
-  imports: [CommonModule,FormsModule,ReactiveFormsModule,RouterModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule]
 })
 export class JobListComponent implements OnInit {
   jobs: Job[] = [];
@@ -20,9 +23,10 @@ export class JobListComponent implements OnInit {
   userRole: string = '';
   showCard: { [key: number]: boolean } = {};
   selectedFile: File | null = null;
-  successMessage: string = '';
-  errorMessage: string = '';
   form: FormGroup;
+  appliedJobIds: number[] = [];
+  userIsHR: boolean = false;
+
   domaines = [
     { value: 'Security', label: 'Security' },
     { value: 'Data', label: 'Data' },
@@ -41,129 +45,138 @@ export class JobListComponent implements OnInit {
     { value: 'Internship', label: 'Internship' }
   ];
 
-  appliedJobIds: number[] = [];
-  userIsHR: boolean = false; // Add a variable to store the result of isHR()
-
-  constructor(private jobService: JobService,private http: HttpClient,private route: ActivatedRoute,private fb: FormBuilder, private authService: AuthService) {this.form = this.fb.group({ resume: null });}
+  constructor(
+    private jobService: JobService,
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private toastr: ToastrService // ✅ Inject Toastr
+  ) {
+    this.form = this.fb.group({ resume: null });
+  }
 
   ngOnInit(): void {
     this.loadJobs();
-    this.loadAppliedJobs(); // Load applied jobs for the user
+    this.loadAppliedJobs();
+
     const userInfo = this.authService.getUserInfo();
-    console.log('User Info:', userInfo); // Debugging log
     if (userInfo && userInfo.roles) {
-        console.log('User Roles:', userInfo.roles); // Debugging log
-        this.userRole = userInfo.roles.includes('HR') ? 'HR' : 'User';
+      this.userRole = userInfo.roles.includes('HR') ? 'HR' : 'User';
     }
-    console.log('User Role:', this.userRole); // Debugging log
 
-    this.userIsHR = this.isHR(); // Store the result of isHR()
+    this.userIsHR = this.isHR();
   }
-  // Add to your component class
-toggleDetails(job: any) {
-  job.showDetails = !job.showDetails;
-}
-   /* loadJobs(): void {
-    this.jobService.getJobs().subscribe({
+
+  toggleDetails(job: any) {
+    job.showDetails = !job.showDetails;
+  }
+
+  loadJobs(): void {
+    this.jobService.getJobs(this.selectedDomaine, this.selectedContractType).subscribe({
       next: (data) => (this.jobs = data),
-      error: (err) => console.error('Error fetching jobs:', err)
-    }); */
-
-
-    loadJobs(): void {
-      this.jobService.getJobs(this.selectedDomaine, this.selectedContractType).subscribe({
-        next: (data) => {
-          this.jobs = data;
-        },
-        error: (err) => {
-          console.error('Error fetching jobs:', err);
-        }
-      });
-    }
-    loadAppliedJobs(): void {
-      this.http.get<number[]>('http://localhost:5183/api/JobApplication/user/applied-jobs').subscribe({
-        next: (data) => {
-          this.appliedJobIds = data;
-        },
-        error: (err) => {
-          console.error('Error fetching applied jobs:', err);
-        }
-      });
-    }
-    isJobApplied(jobId: number): boolean {
-      return this.appliedJobIds.includes(jobId);
-    }
-    toggleCard(jobId: number) {
-      this.showCard[jobId] = !this.showCard[jobId];
-      console.log('showCard state:', this.showCard);
-    }
-    onFileChange(event: any):void {
-      if (event.target.files.length > 0) {
-        this.selectedFile = event.target.files[0];
+      error: (err) => {
+        console.error('Error fetching jobs:', err);
+        this.toastr.error('Failed to load jobs. Please try again.', 'Error ❌');
       }
+    });
+  }
+
+  loadAppliedJobs(): void {
+    this.http.get<number[]>('http://localhost:5183/api/JobApplication/user/applied-jobs').subscribe({
+      next: (data) => {
+        this.appliedJobIds = data;
+      },
+      error: (err) => {
+        console.error('Error fetching applied jobs:', err);
+        this.toastr.error('Failed to load applied jobs.', 'Error ❌');
+      }
+    });
+  }
+
+  isJobApplied(jobId: number): boolean {
+    return this.appliedJobIds.includes(jobId);
+  }
+
+  toggleCard(jobId: number): void {
+    this.showCard[jobId] = !this.showCard[jobId];
+  }
+
+  onFileChange(event: any): void {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
+
+  apply(jobId: number): void {
+    if (!this.selectedFile) {
+      this.toastr.warning('Please upload your resume before applying.', 'Warning ⚠️');
+      return;
     }
 
-    apply(jobId: number): void {
-      if (!this.selectedFile) return;
+    this.jobService.getJobById(jobId.toString()).subscribe((jobDetails) => {
+      const pythonFormData = new FormData();
+      pythonFormData.append('resume', this.selectedFile!);
+      pythonFormData.append('jobDetails', JSON.stringify(jobDetails));
 
-      this.jobService.getJobById(jobId.toString()).subscribe((jobDetails) => {
-        const pythonFormData = new FormData();
-        pythonFormData.append('resume', this.selectedFile!);
-        pythonFormData.append('jobDetails', JSON.stringify(jobDetails));
+      this.http.post<any>('http://localhost:5000/evaluate', pythonFormData).subscribe((result) => {
+        const formData = new FormData();
+        formData.append('resume', this.selectedFile!, this.selectedFile!.name);
+        formData.append('jobPostingId', jobId.toString());
+        formData.append('status', 'Pending');
+        formData.append('JDMatchPercentage', result.JDMatchPercentage?.toString() ?? '0');
+        const missingKeywords = result.MissingKeywords?.toString().trim() || 'N/A';
+        const matchingKeywords = Array.isArray(result.MatchingKeywords)
+          ? result.MatchingKeywords.join(', ')
+          : (result.MatchingKeywords?.toString().trim() || 'N/A');
+        const profileSummary = result.ProfileSummary?.toString().trim() || 'N/A';
+        formData.append('missingKeywords', missingKeywords);
+        formData.append('matchingKeywords', matchingKeywords);
+        formData.append('profileSummary', profileSummary);
 
-        this.http.post<any>('http://localhost:5000/evaluate', pythonFormData).subscribe((result) => {
-          const formData = new FormData();
-
-          formData.append('resume', this.selectedFile!, this.selectedFile!.name);
-          formData.append('jobPostingId', jobId.toString());
-          formData.append('status', 'Pending');
-          formData.append('JDMatchPercentage', result.JDMatchPercentage?.toString() ?? '0');
-
-          const missingKeywords = result.MissingKeywords?.toString().trim() || 'N/A';
-          const matchingKeywords = Array.isArray(result.MatchingKeywords)
-            ? result.MatchingKeywords.join(', ')
-            : (result.MatchingKeywords?.toString().trim() || 'N/A');
-          const profileSummary = result.ProfileSummary?.toString().trim() || 'N/A';
-          formData.append('missingKeywords', missingKeywords);
-          formData.append('matchingKeywords', matchingKeywords);
-          formData.append('profileSummary', profileSummary);
-
-          this.http.post('http://localhost:5183/api/JobApplication', formData).subscribe({
-            next: () => {
-              this.successMessage = 'Application submitted successfully!';
-              this.errorMessage = '';
-              this.selectedFile = null;
-              this.showCard[jobId] = false;
-              this.loadJobs();
-            },
-            error: (err) => {
-              console.error('Error submitting application:', err);
-              this.errorMessage = 'Failed to submit application. Please try again.';
-              this.successMessage = '';
-            }
-          });
+        this.http.post('http://localhost:5183/api/JobApplication', formData).subscribe({
+          next: () => {
+            this.toastr.success('Application submitted successfully!', 'Success ✅');
+            this.selectedFile = null;
+            this.showCard[jobId] = false;
+            this.loadJobs();
+          },
+          error: (err) => {
+            console.error('Error submitting application:', err);
+            this.toastr.error('Failed to submit application. Please try again.', 'Error ❌');
+          }
         });
       });
-    }
+    });
+  }
 
-
-    /*  onEdit(id: number): void {
-    this.router.navigate(['/job/update', id]);
-  } */
-
-
-     onDelete(id: number): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce job ?')) {
-      this.jobService.deleteJob(id).subscribe(() => {
-        this.loadJobs(); // Recharge la liste
+  onDelete(id: number): void {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'This action will permanently delete the job.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.jobService.deleteJob(id).subscribe({
+        next: () => {
+          this.toastr.success('Job deleted successfully.', 'Deleted ✅');
+          this.loadJobs();
+        },
+        error: (err) => {
+          console.error('Error deleting job:', err);
+          this.toastr.error('Failed to delete job.', 'Error ❌');
+        }
       });
-    }}
-
-    isHR(): boolean {
-      return this.userRole === 'HR';
     }
+  });
+}
 
-
-
-
+  isHR(): boolean {
+    return this.userRole === 'HR';
+  }
 }

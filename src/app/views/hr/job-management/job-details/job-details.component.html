@@ -92,7 +92,7 @@
       <a routerLink="/jobs" class="btn btn-secondary">
         <i class="fas fa-arrow-left"></i> Back to List
       </a>
-      <a [routerLink]="['/jobs/edit', job.id]" class="btn btn-primary">
+      <a *ngIf="userIsHR" [routerLink]="['/jobs/edit', job.id]" class="btn btn-primary">
         <i class="fas fa-edit"></i> Edit Job
       </a>
     </footer>
