@@ -1,4 +1,4 @@
-````markdown
+
 # NeuroHr
 
 NeuroHr is a comprehensive Human Resources management platform designed to modernize recruitment processes by leveraging AI-driven resume evaluation and job matching. This full-stack application combines a modern Angular frontend, a robust .NET backend API, and a Python microservice for advanced resume analysis.
@@ -233,4 +233,4 @@ If you have any questions or suggestions, feel free to reach out:
 ---
 
 Thank you for using **NeuroHr** — empowering smarter hiring with AI!
-```
+
