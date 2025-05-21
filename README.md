@@ -50,12 +50,14 @@ NeuroHr is a comprehensive Human Resources management platform designed to moder
 
 ## Architecture Overview
 
-```plaintext
-[Angular Frontend] <--> [ASP.NET Backend API] <--> [SQL Server Database]
-                           |
-                           v
-                 [Python Flask AI Microservice]
-````
+Angular Frontend
+      ↓
+ASP.NET Backend API
+      ↓
+SQL Server Database
+      ↓
+Python Flask AI Microservice
+
 
 * Frontend interacts with backend API for all CRUD operations.
 * Backend calls AI microservice to analyze uploaded resumes.
