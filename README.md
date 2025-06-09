@@ -1,236 +1,194 @@
+# 🤖 NeuroHR - AI-Powered HR Management Platform
 
-# NeuroHr
+NeuroHR is a smart HR management system designed to streamline recruitment, resume evaluation, and job matching using Artificial Intelligence.
 
-NeuroHr is a comprehensive Human Resources management platform designed to modernize recruitment processes by leveraging AI-driven resume evaluation and job matching. This full-stack application combines a modern Angular frontend, a robust .NET backend API, and a Python microservice for advanced resume analysis.
+## 🌐 Tech Stack
 
----
-
-## Table of Contents
-
-- [Features](#features)  
-- [Tech Stack](#tech-stack)  
-- [Architecture](#architecture)  
-- [Installation](#installation)  
-  - [Prerequisites](#prerequisites)  
-  - [Frontend Setup](#frontend-setup)  
-  - [Backend Setup](#backend-setup)  
-  - [AI Microservice Setup](#ai-microservice-setup)  
-- [Configuration](#configuration)  
-- [Usage](#usage)  
-- [API Endpoints](#api-endpoints)  
-- [Contributing](#contributing)  
-- [License](#license)  
+* **Frontend**: Angular
+* **Backend**: .NET Web API
+* **AI Microservice**: Python (Flask)
+* **Database**: MongoDB / SQL Server
 
 ---
 
-## Features
+## 🚀 Key Features
 
-- **Job Management:** Create, update, delete, and list job postings with filtering by domain and contract type.
-- **User Roles:** Role-based access for candidates and HR personnel.
-- **Job Application:** Candidates can upload resumes and apply for jobs.
-- **AI-Powered Resume Evaluation:** Integration with a Python Flask microservice that analyzes resumes and returns matching scores, missing keywords, and profile summaries.
-- **Notifications:** User-friendly alerts and confirmations via SweetAlert2.
-- **Real-time UI Updates:** Reflect job application status dynamically.
-- **Secure Authentication:** JWT-based authentication and authorization.
-- **Responsive UI:** Modern Angular components with CoreUI integration.
+### ✅ AI Resume Matching
 
----
+* Analyze resume vs. job description
+* Return:
 
-## Tech Stack
+  * Relevancy Score
+  * Missing Keywords
+  * AI-Generated Profile Summary
+* **\[NEW]** Automatically extract full candidate profiles from uploaded resumes using AI
 
-| Layer             | Technology                |
-|-------------------|---------------------------|
-| Frontend          | Angular 19, TypeScript, RxJS, SweetAlert2, CoreUI Angular |
-| Backend API       | .NET 9 Web API, C#        |
-| AI Microservice   | Python 3, Flask, Groq API |
-| Database          | SQL Server (or any RDBMS) |
-| Authentication    | JWT, ASP.NET Identity     |
+### 🧠 AI Profile Auto-Generation
 
----
+* Upload a resume and let AI auto-fill the user profile
+* Extracted fields include:
 
-## Architecture Overview
+  * Name, Email, Phone
+  * Experience (roles, companies, durations)
+  * Education (degrees, institutions)
+  * Skills (technical and soft)
+  * Summary
+* Optional manual editing supported
 
-Angular Frontend
-      ↓
-ASP.NET Backend API
-      ↓
-SQL Server Database
-      ↓
-Python Flask AI Microservice
+### 👤 Role-Based Access
 
+* **Admin**: Full access to all features
+* **HR Manager**: Manage job postings, view applications
+* **Candidate**: Apply to jobs, edit profile
 
-* Frontend interacts with backend API for all CRUD operations.
-* Backend calls AI microservice to analyze uploaded resumes.
-* AI microservice returns structured evaluation data that backend stores and returns to frontend.
+### 📬 Notifications
 
----
+* Email alerts for:
 
-## Installation
+  * Application status
+  * Interview invitations
 
-### Prerequisites
+### 📊 Audit Logs
 
-* **Node.js** (v18 or higher)
-* **.NET SDK 9**
-* **Python 3.9+**
-* **SQL Server** or compatible database
-* **Git** (optional, for cloning repo)
+* Admins can view logs of critical system activities
+
+### 📂 Admin Panel (Optional)
+
+* Built with **React** or **AdminJS**
+* Dashboard for monitoring users, job posts, AI usage
 
 ---
 
-### Frontend Setup
+## 📚 Usage
 
-1. Navigate to the frontend folder:
+1. **Register/Login** (with role selection: Admin, HR, Candidate)
+2. **Candidate**:
 
-   ```bash
-   cd NeuroHr-frontend
-   ```
+   * Upload resume OR manually fill profile
+   * AI extracts profile fields automatically
+   * Browse jobs and apply
+3. **HR**:
 
-2. Install dependencies:
+   * Create/edit job postings
+   * View ranked applications using AI scores
+4. **Admin**:
 
-   ```bash
-   npm install
-   ```
-
-3. Start the Angular development server:
-
-   ```bash
-   npm run start
-   ```
-
-4. Open your browser at [http://localhost:4200](http://localhost:4200)
+   * Monitor users and logs
+   * Configure AI features
 
 ---
 
-### Backend Setup
+## 📡 API Endpoints
 
-1. Navigate to the backend folder:
+### .NET Backend API — `http://localhost:5183/api/...`
 
-   ```bash
-   cd NeuroHr-backend
-   ```
+#### 🔐 Auth
 
-2. Restore .NET dependencies:
+* `POST /api/Auth/register` — Register new user
+* `POST /api/Auth/login` — Authenticate user (returns JWT)
 
-   ```bash
-   dotnet restore
-   ```
+#### 👥 User
 
-3. Configure your database connection in `appsettings.json`:
+* `GET /api/User` — Get all users
+* `GET /api/User/{id}` — Get user by ID
+* `POST /api/User` — Add user
+* `PUT /api/User/{id}` — Update user
+* `DELETE /api/User/{id}` — Delete user
+* `POST /api/User/send-email` — Send email notification
 
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=YOUR_SERVER;Database=NeuroHrDb;Trusted_Connection=True;MultipleActiveResultSets=true"
-   }
-   ```
+#### 📄 JobPosting
 
-4. Run database migrations if applicable (e.g., EF Core migrations).
+* `GET /api/JobPosting` — Get all jobs (with filters)
+* `GET /api/JobPosting/{id}` — Get job by ID
+* `POST /api/JobPosting` — Create job (HR only)
+* `PUT /api/JobPosting/{id}` — Update job (HR only)
+* `DELETE /api/JobPosting/{id}` — Delete job (HR only)
 
-5. Start the backend API server:
+#### 📬 JobApplication
 
-   ```bash
-   dotnet run
-   ```
+* `GET /api/JobApplication` — Get all applications
+* `GET /api/JobApplication/{id}` — Get application by ID
+* `POST /api/JobApplication` — Submit application
+* `PUT /api/JobApplication/{id}` — Update application
+* `DELETE /api/JobApplication/{id}` — Delete application
+* `GET /api/JobApplication/user` — Get current user’s applications
+* `GET /api/JobApplication/user/applied-jobs` — Jobs user applied to
+* `GET /api/JobApplication/job/{jobId}/candidates` — Candidates for a job
+* `PATCH /api/JobApplication/{applicationId}/status` — Change status
 
----
+### 🧠 Python Flask AI Microservice — `http://localhost:5000/...`
 
-### AI Microservice Setup
-
-1. Navigate to the AI microservice folder:
-
-   ```bash
-   cd NeuroHr-ai-service
-   ```
-
-2. Create and activate a virtual environment:
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate   # Linux/macOS
-   venv\Scripts\activate      # Windows
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Run the Flask app:
-
-   ```bash
-   python app.py
-   ```
-
-5. The AI service will be accessible at `http://localhost:5000`
+* `POST /evaluate` — Evaluate resume vs. job description
+* `POST /extract_profile` — Extract structured profile from resume
+* `GET /models` — View available AI models
 
 ---
 
-## Configuration
+## 🛠️ Config
 
-* **API URLs:** Ensure Angular services point to your backend URLs (`http://localhost:5183/api/...`) and AI microservice URL (`http://localhost:5000/evaluate`)
-* **CORS:** Configure CORS policies in backend and AI service to allow frontend requests.
-* **Authentication:** Update JWT secret keys and token expiration settings in backend `appsettings.json`.
-* **Database:** Adjust connection strings and run EF migrations or SQL scripts.
-
----
-
-## Usage
-
-* Register or log in as a Candidate or HR.
-* Browse jobs filtered by domain or contract type.
-* Candidates upload resumes to apply for jobs.
-* Applications are analyzed by AI microservice and results stored.
-* HR users manage job postings and view candidate applications with AI insights.
-* Notifications and confirmation dialogs improve user experience.
+```json
+"AISettings": {
+  "EnableProfileAutoFill": true
+}
+```
 
 ---
 
-## API Endpoints (Sample)
+## 📦 Installation & Run
 
-| Endpoint                                | Method | Description                        |
-| --------------------------------------- | ------ | ---------------------------------- |
-| `/api/Auth/register`                    | POST   | Register new user                  |
-| `/api/Auth/login`                       | POST   | Authenticate user and return JWT   |
-| `/api/Job`                              | GET    | Get list of jobs                   |
-| `/api/Job`                              | POST   | Create a new job (HR only)         |
-| `/api/Job/{id}`                         | PUT    | Update job by id (HR only)         |
-| `/api/Job/{id}`                         | DELETE | Delete job by id (HR only)         |
-| `/api/JobApplication`                   | POST   | Submit a job application           |
-| `/api/JobApplication/user/applied-jobs` | GET    | Get jobs applied by the user       |
-| `/evaluate` (Python service)            | POST   | Analyze resume against job details |
+### 🖥️ Backend (.NET)
 
----
+```bash
+cd Backend
+ dotnet restore
+ dotnet run
+```
 
-## Contributing
+### 🧪 AI Microservice (Python Flask)
 
-Contributions are welcome! To contribute:
+```bash
+cd ai-service
+pip install -r requirements.txt
+python app.py
+```
 
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/my-feature`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin feature/my-feature`).
-5. Open a pull request.
+### 🌐 Frontend (Angular)
 
-Please make sure to follow existing code style and add tests where appropriate.
+```bash
+cd frontend
+npm install
+ng serve
+```
 
 ---
 
-## License
+## 🤝 Contributing
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+We welcome community involvement! To contribute:
 
----
+1. Fork this repo.
+2. Create a branch: `git checkout -b feature/my-feature`
+3. Commit: `git commit -am "Add feature"`
+4. Push: `git push origin feature/my-feature`
+5. Submit a pull request 🚀
 
-## Contact
-
-If you have any questions or suggestions, feel free to reach out:
-
-* **Author:** \[Ahlem Ben Mohamed - Nour Elhouda el khedhri]
-* **Email:** [benmohamedahlemm@gmail.com](mailto:benmohamedahlemm@gmail.com)
-* **Email:** [nourkhedri0206@gmail.com](mailto:nourkhedri0206@gmail.com)
-
+Make sure to follow the code style and test your changes before PR submission.
 
 ---
 
-Thank you for using **NeuroHr** — empowering smarter hiring with AI!
+## 📬 Contact
 
+For support or collaboration opportunities:
+
+* **Ahlem Ben Mohamed**
+  📧 [benmohamedahlemm@gmail.com](mailto:benmohamedahlemm@gmail.com)
+
+* **Nour Elhouda El Khedhri**
+  📧 [nourkhedri0206@gmail.com](mailto:nourkhedri0206@gmail.com)
+
+---
+
+> Built with ❤️ to empower smarter hiring through AI.
+> **NeuroHr** – Your next-gen talent acquisition partner.
+
+---
