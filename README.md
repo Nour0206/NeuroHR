@@ -158,7 +158,8 @@ NeuroHR is a modern AI-driven recruitment platform that streamlines the hiring p
 ### Lazy-Loaded Modules (via `DefaultLayoutComponent`)
 
 | Path                                                                  | Feature                            |
-| --------------------------------------------------------------------- | ---------------------------------- |             | `/users`                                                              | User management                    |
+| --------------------------------------------------------------------- | ---------------------------------- |            
+| `/users`                                                              | User management                    |
 | `/job`                                                                | Job management                     |
 | `/candidate`                                                          | Candidate management               |
 | `/chatbot`                                                            | AI chatbot                         |
