@@ -1,136 +1,180 @@
-# 🤖 NeuroHR - AI-Powered HR Management Platform
+# 🧠 NeuroHR – AI-Powered HR Management Platform
 
-NeuroHR is a smart HR management system designed to streamline recruitment, resume evaluation, and job matching using Artificial Intelligence.
-
-## 🌐 Tech Stack
-
-* **Frontend**: Angular
-* **Backend**: .NET Web API
-* **AI Microservice**: Python (Flask)
-* **Database**: MongoDB / SQL Server
+NeuroHR is a modern AI-driven recruitment platform that streamlines the hiring process for HR teams and job seekers alike. With a powerful .NET backend, a responsive Angular frontend, and integrated AI microservices, it automates resume screening, matches candidates to job posts, and allows for seamless job applications and user management.
 
 ---
 
-## 🚀 Key Features
+## 🚀 Features
 
-### ✅ AI Resume Matching
+### 👤 User Management
 
-* Analyze resume vs. job description
-* Return:
+* Register and authenticate via JWT.
+* Role-based access (Admin, HR, User).
+* View, update, and delete users.
+* Email notifications (e.g., application updates).
 
-  * Relevancy Score
-  * Missing Keywords
-  * AI-Generated Profile Summary
-* **\[NEW]** Automatically extract full candidate profiles from uploaded resumes using AI
+### 🧳 Job Postings
 
-### 🧠 AI Profile Auto-Generation
+* HR users can post, update, and manage job offers.
+* Filter/search jobs.
+* View job details and associated candidates.
 
-* Upload a resume and let AI auto-fill the user profile
-* Extracted fields include:
+### 📄 Job Applications
 
-  * Name, Email, Phone
-  * Experience (roles, companies, durations)
-  * Education (degrees, institutions)
-  * Skills (technical and soft)
-  * Summary
-* Optional manual editing supported
+* Users can apply to jobs and view their application history.
+* HR can view all applications, filter by job, and manage application statuses.
 
-### 👤 Role-Based Access
+### 🧠 AI Integration (Python Microservice)
 
-* **Admin**: Full access to all features
-* **HR Manager**: Manage job postings, view applications
-* **Candidate**: Apply to jobs, edit profile
+* **Resume Analyzer**: Score resumes based on job requirements.
+* **Profile Extractor**: Auto-generate candidate profiles from resumes.
 
-### 📬 Notifications
+### 🎯 Smart Onboarding
 
-* Email alerts for:
-
-  * Application status
-  * Interview invitations
-
-### 📊 Audit Logs
-
-* Admins can view logs of critical system activities
-
-### 📂 Admin Panel (Optional)
-
-* Built with **React** or **AdminJS**
-* Dashboard for monitoring users, job posts, AI usage
+* New users can build a profile manually or by uploading their resume for AI extraction.
 
 ---
 
-## 📚 Usage
+## ⚙️ Technologies Used
 
-1. **Register/Login** (with role selection: Admin, HR, Candidate)
-2. **Candidate**:
-
-   * Upload resume OR manually fill profile
-   * AI extracts profile fields automatically
-   * Browse jobs and apply
-3. **HR**:
-
-   * Create/edit job postings
-   * View ranked applications using AI scores
-4. **Admin**:
-
-   * Monitor users and logs
-   * Configure AI features
+| Layer       | Tech Stack                              |
+| ----------- | --------------------------------------- |
+| Backend API | .NET 8 (C#), Entity Framework, JWT Auth |
+| Frontend    | Angular 17, Tailwind CSS                |
+| AI Services | Python (Flask), NLP & ML Models         |
+| Database    | SQL Server                              |
+| Dev Tools   | Postman, Swagger, Docker (optional)     |
 
 ---
 
-## 📡 API Endpoints
+## 📁 Folder Structure
 
-### .NET Backend API — `http://localhost:5183/api/...`
+### Backend (.NET)
 
-#### 🔐 Auth
-
-* `POST /api/Auth/register` — Register new user
-* `POST /api/Auth/login` — Authenticate user (returns JWT)
-
-#### 👥 User
-
-* `GET /api/User` — Get all users
-* `GET /api/User/{id}` — Get user by ID
-* `POST /api/User` — Add user
-* `PUT /api/User/{id}` — Update user
-* `DELETE /api/User/{id}` — Delete user
-* `POST /api/User/send-email` — Send email notification
-
-#### 📄 JobPosting
-
-* `GET /api/JobPosting` — Get all jobs (with filters)
-* `GET /api/JobPosting/{id}` — Get job by ID
-* `POST /api/JobPosting` — Create job (HR only)
-* `PUT /api/JobPosting/{id}` — Update job (HR only)
-* `DELETE /api/JobPosting/{id}` — Delete job (HR only)
-
-#### 📬 JobApplication
-
-* `GET /api/JobApplication` — Get all applications
-* `GET /api/JobApplication/{id}` — Get application by ID
-* `POST /api/JobApplication` — Submit application
-* `PUT /api/JobApplication/{id}` — Update application
-* `DELETE /api/JobApplication/{id}` — Delete application
-* `GET /api/JobApplication/user` — Get current user’s applications
-* `GET /api/JobApplication/user/applied-jobs` — Jobs user applied to
-* `GET /api/JobApplication/job/{jobId}/candidates` — Candidates for a job
-* `PATCH /api/JobApplication/{applicationId}/status` — Change status
-
-### 🧠 Python Flask AI Microservice — `http://localhost:5000/...`
-
-* `POST /evaluate` — Evaluate resume vs. job description
-* `POST /extract_profile` — Extract structured profile from resume
-* `GET /models` — View available AI models
-
----
-
-## 🛠️ Config
-
-```json
-"AISettings": {
-  "EnableProfileAutoFill": true
-}
 ```
+/NeuroHRBack
+├── Controllers
+├── Models
+├── DTOs
+├── Services
+├── Data
+└── Program.cs
+```
+
+### AI Microservice (Python Flask)
+
+```
+/ats
+├── app.py
+├── .env
+├──requirements.txt
+└── models/
+```
+
+### Frontend (Angular)
+
+```
+/NEUROHR
+├── src/app
+│   ├── job
+│   ├── candidate
+│   ├── user
+│   ├── auth
+│   ├── chatbot
+│   ├── onboarding
+│   ├── profile
+│   └── pipes
+```
+
+---
+
+## 🌐 API Documentation
+
+### 🔐 Auth
+
+| Method | Endpoint             | Description                 |
+| ------ | -------------------- | --------------------------- |
+| POST   | `/api/Auth/register` | Register a new user         |
+| POST   | `/api/Auth/login`    | Authenticate and return JWT |
+
+### 👤 User
+
+| Method | Endpoint               | Description               |
+| ------ | ---------------------- | ------------------------- |
+| GET    | `/api/User`            | Get all users             |
+| GET    | `/api/User/{id}`       | Get user by ID            |
+| POST   | `/api/User`            | Add user                  |
+| PUT    | `/api/User/{id}`       | Update user               |
+| DELETE | `/api/User/{id}`       | Delete user               |
+| POST   | `/api/User/send-email` | Send email (notification) |
+
+### 💼 JobPosting
+
+| Method | Endpoint               | Description                      |
+| ------ | ---------------------- | -------------------------------- |
+| GET    | `/api/JobPosting`      | List all jobs (filter supported) |
+| GET    | `/api/JobPosting/{id}` | Get job by ID                    |
+| POST   | `/api/JobPosting`      | Add job (HR only)                |
+| PUT    | `/api/JobPosting/{id}` | Update job (HR only)             |
+| DELETE | `/api/JobPosting/{id}` | Delete job (HR only)             |
+
+### 📄 JobApplication
+
+| Method | Endpoint                                     | Description                  |
+| ------ | -------------------------------------------- | ---------------------------- |
+| GET    | `/api/JobApplication`                        | Get all job applications     |
+| GET    | `/api/JobApplication/{id}`                   | Get job application by ID    |
+| POST   | `/api/JobApplication`                        | Submit job application       |
+| PUT    | `/api/JobApplication/{id}`                   | Update application           |
+| DELETE | `/api/JobApplication/{id}`                   | Delete application           |
+| GET    | `/api/JobApplication/user`                   | Applications by current user |
+| GET    | `/api/JobApplication/user/applied-jobs`      | Jobs applied by user         |
+| GET    | `/api/JobApplication/job/{jobId}/candidates` | Candidates for a job         |
+| PATCH  | `/api/JobApplication/{applicationId}/status` | Update application status    |
+
+### 🤖 AI Microservice (Python Flask)
+
+| Method | Endpoint           | Description                 |
+| ------ | ------------------ | --------------------------- |
+| POST   | `/evaluate`        | Match resume to job         |
+| POST   | `/extract_profile` | Extract profile from resume |
+| GET    | `/models`          | List available AI models    |
+
+---
+
+## 🧭 Angular App Routing Overview
+
+### Top-Level Routes
+
+| Path                     | Description                        |
+| ------------------------ | ---------------------------------- |
+| `/`                      | Redirect to dashboard              |
+| `/login`, `/register`    | Auth pages                         |
+| `/onboarding`            | Profile onboarding (resume/manual) |
+| `/firstLogin`            | Post-registration setup            |
+| `/user-job-applications` | View user's job applications       |
+| `/404`, `/500`           | Error pages                        |
+
+### Lazy-Loaded Modules (via `DefaultLayoutComponent`)
+
+| Path                                                                  | Feature                            |
+| --------------------------------------------------------------------- | ---------------------------------- |             | `/users`                                                              | User management                    |
+| `/job`                                                                | Job management                     |
+| `/candidate`                                                          | Candidate management               |
+| `/chatbot`                                                            | AI chatbot                         |
+| `/forms`, `/icons`, `/notifications`, `/widgets`, `/charts`, `/pages` | UI/UX modules                      |
+| `/profile`                                                            | User profile view/edit (protected) |
+
+---
+
+## ✅ Setup Instructions
+
+ **Clone the repository**
+
+   ```bash
+   git clone https://github.com/your-org/neurohr.git](https://github.com/Nour0206/NeuroHr.git
+   cd NeuroHr
+   ```
 
 ---
 
@@ -139,7 +183,7 @@ NeuroHR is a smart HR management system designed to streamline recruitment, resu
 ### 🖥️ Backend (.NET)
 
 ```bash
-cd Backend
+ cd NeuroBack
  dotnet restore
  dotnet run
 ```
@@ -147,7 +191,7 @@ cd Backend
 ### 🧪 AI Microservice (Python Flask)
 
 ```bash
-cd ai-service
+cd ats
 pip install -r requirements.txt
 python app.py
 ```
@@ -155,7 +199,7 @@ python app.py
 ### 🌐 Frontend (Angular)
 
 ```bash
-cd frontend
+cd NEUROHR
 npm install
 ng serve
 ```
